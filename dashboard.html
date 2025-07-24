@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>EHCB Feedback & Coach Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" href="ehcb-icon.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="ehcb-icon.png" sizes="192x192" />
+  <link rel="manifest" href="manifest.json">
+  <!-- Externes Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <a class="back-btn" id="backBtn" href="index.html" aria-label="Zurück zur Startseite">← Zurück</a>
+  <header>
+    <img src="wikinger.png" class="header-logo" alt="Logo" />
+    <div class="main-title" id="main-title">EHC BIEL-BIENNE U18-ELIT</div>
+  </header>
+  <div class="langbar">
+  <div class="lang-btns-row">
+    <button class="lang-btn" id="btn-de" data-lang="de" aria-label="Sprache Deutsch wählen" type="button">DE</button>
+    <button class="lang-btn" id="btn-fr" data-lang="fr" aria-label="Sprache Französisch wählen" type="button">FR</button>
+    <button class="lang-btn" id="btn-en" data-lang="en" aria-label="Sprache Englisch wählen" type="button">EN</button>
+  </div>
+  <div class="dark-toggle-wrap">
+  <span class="toggle-switch" id="darkToggle" tabindex="0" aria-label="Dark Mode Toggle">
+    <span class="slider"></span>
+  </span>
+  <span class="dark-toggle-label" id="darkToggleLabel" title="Dark Mode">🌙</span>
+</div>
+</div>
+  <main class="main-content">
+    <!-- Feedback Formular für Spieler -->
+    <section class="form-block" id="feedback-form-section">
+      <form id="feedbackForm" autocomplete="off">
+        <label id="feedbackFormTitle" style="font-size:1.27rem;text-align:center;margin-bottom:1.2rem;">Spieler Reflexion</label>
+        <label id="labelName">Name*</label>
+        <input type="text" id="name" name="name" required autocomplete="off">
+        <label id="labelFeeling" for="feeling">🧠 Stimmung</label>
+        <select id="feeling" name="feeling" required></select>
+        <label id="labelEnergy" for="energy">⚡ Energie-Level</label>
+        <select id="energy" name="energy" required></select>
+        <label id="labelIntensity" for="intensity">🔥 Intensität Training/Spiel</label>
+        <select id="intensity" name="intensity"></select>
+        <label id="labelPerformance" for="performance">🎯 Eigene Leistung</label>
+        <select id="performance" name="performance"></select>
+        <label id="labelComment">💬 Kommentar-Feedback</label>
+        <textarea id="comment" name="comment"></textarea>
+        <button type="submit" id="submitBtn" class="btn">Absenden</button>
+        <div id="feedback-success" class="success"></div>
+      </form>
+    </section>
+    <!-- Admin Login -->
+    <section class="login-card" id="login-section">
+      <label id="loginTitle" style="font-size:1.18rem;text-align:center;margin-bottom:1.09rem;">🔐 Coach Dashboard Login</label>
+      <input type="password" id="password" placeholder="Admin Passwort eingeben" autocomplete="current-password" />
+      <button onclick="checkPassword()" id="loginBtn" class="btn">Login</button>
+      <div id="login-msg" class="error"></div>
+    </section>
+    <!-- Dashboard Content (hidden by default) -->
+    <div class="feedback-list" id="dashboard-section" style="display:none;">
+      <input type="text" id="feedbackSearch" placeholder="Feedback durchsuchen..." style="width:100%;max-width:400px;margin:0 auto 1.3rem auto;display:block;padding:12px;font-size:1.09rem;border-radius:7px;border:1.2px solid #bbb;background:#fff;color:#002d5b;box-shadow:0 1px 6px #2221;">
+      <div style="width:100%;max-width:400px;margin:0 auto 1.0rem auto;display:flex;gap:0.5rem;">
+        <select id="sortField" style="flex:1;padding:10px;border-radius:7px;border:1.2px solid #bbb;">
+          <option value="date_desc">⏳ Neueste zuerst</option>
+          <option value="date_asc">⏳ Älteste zuerst</option>
+          <option value="name_az">🔤 Name A–Z</option>
+          <option value="name_za">🔤 Name Z–A</option>
+        </select>
+      </div>
+      <div id="feedback-list"></div>
+    </div>
+  </main>
+  <div class="yellow-slogan" id="slogan">
+    "OUR STRENGTH IS OUR UNITY!"
+  </div>
+  
+  <footer>
+    © 2025 EHC Biel-Bienne U18-Elit
+  </footer>
+  <!-- Loader für spätere Nutzung -->
+  <div class="loader-backdrop" id="loader">
+    <svg class="svg-loader" viewBox="0 0 60 60"><circle cx="30" cy="30" r="24" stroke-dasharray="130" stroke-dashoffset="35"></circle></svg>
+  </div>
+  <!-- Dashboard-JS (identisch wie vorher, ggf. leicht optimiert) -->
+  <script>
+    // ---- Sprach- und Optionsdaten (wie gehabt, bleibt gleich) ----
+    const translations = {
+      de: {
+        feedbackFormTitle: "Spieler Reflexion",
+        labelName: "Name*",
+        labelFeeling: "🧠 Stimmung",
+        labelEnergy: "⚡ Energie-Level",
+        labelIntensity: "🔥 Intensität Training/Spiel",
+        labelPerformance: "🎯 Eigene Leistung",
+        labelComment: "💬 Kommentar-Rückmeldungen",
+        submitBtn: "Absenden",
+        loginTitle: "🔐 Coach Dashboard Login",
+        passwordPlaceholder: "Admin Passwort eingeben",
+        loginBtn: "Login",
+        feedbackSearchPlaceholder: "Feedback durchsuchen...",
+        sortDateDesc: "⏳ Neueste zuerst",
+        sortDateAsc: "⏳ Älteste zuerst",
+        sortNameAZ: "🔤 Name A–Z",
+        sortNameZA: "🔤 Name Z–A",
+        feedbackSuccess: "Feedback erfolgreich gesendet!",
+        loginFailed: "Falsches Passwort!",
+      },
+      fr: {
+        feedbackFormTitle: "Réflexion du joueur",
+        labelName: "Nom*",
+        labelFeeling: "🧠 Humeur",
+        labelEnergy: "⚡ Niveau d'énergie",
+        labelIntensity: "🔥 Intensité entraînement/jeu",
+        labelPerformance: "🎯 Performance personnelle",
+        labelComment: "💬 Commentaire-Retour d'information",
+        submitBtn: "Envoyer",
+        loginTitle: "🔐 Connexion tableau de bord coach",
+        passwordPlaceholder: "Entrez le mot de passe admin",
+        loginBtn: "Connexion",
+        feedbackSearchPlaceholder: "Rechercher dans les feedbacks...",
+        sortDateDesc: "⏳ Plus récents en premier",
+        sortDateAsc: "⏳ Plus anciens en premier",
+        sortNameAZ: "🔤 Nom A–Z",
+        sortNameZA: "🔤 Nom Z–A",
+        feedbackSuccess: "Feedback envoyé avec succès!",
+        loginFailed: "Mot de passe incorrect!",
+      },
+      en: {
+        feedbackFormTitle: "Player Reflection",
+        labelName: "Name*",
+        labelFeeling: "🧠 Mood",
+        labelEnergy: "⚡ Energy Level",
+        labelIntensity: "🔥 Training/Game Intensity",
+        labelPerformance: "🎯 Own Performance",
+        labelComment: "💬 Comment-Feedback",
+        submitBtn: "Submit",
+        loginTitle: "🔐 Coach Dashboard Login",
+        passwordPlaceholder: "Enter admin password",
+        loginBtn: "Login",
+        feedbackSearchPlaceholder: "Search feedback...",
+        sortDateDesc: "⏳ Newest first",
+        sortDateAsc: "⏳ Oldest first",
+        sortNameAZ: "🔤 Name A–Z",
+        sortNameZA: "🔤 Name Z–A",
+        feedbackSuccess: "Feedback submitted successfully!",
+        loginFailed: "Wrong password!",
+      }
+    };
+
+    const feelingOptions = {
+      de: [
+        {value:"", text:"Bitte wählen..."},
+        {value:"🟢 Top", text:"🟢 Top"},
+        {value:"🟡 Okay", text:"🟡 Okay"},
+        {value:"🔴 Tired", text:"🔴 Müde"}
+      ],
+      fr: [
+        {value:"", text:"Veuillez choisir..."},
+        {value:"🟢 Top", text:"🟢 Au top"},
+        {value:"🟡 Okay", text:"🟡 Moyen"},
+        {value:"🔴 Tired", text:"🔴 Fatigué"}
+      ],
+      en: [
+        {value:"", text:"Please select..."},
+        {value:"🟢 Top", text:"🟢 Top"},
+        {value:"🟡 Okay", text:"🟡 Okay"},
+        {value:"🔴 Tired", text:"🔴 Tired"}
+      ]
+    };
+    const energyOptions = {
+      de: [
+        {value:"", text:"Bitte wählen..."},
+        {value:"1", text:"1 – 😴 sehr müde"},
+        {value:"2", text:"2"},
+        {value:"3", text:"3"},
+        {value:"4", text:"4"},
+        {value:"5", text:"5"},
+        {value:"6", text:"6"},
+        {value:"7", text:"7"},
+        {value:"8", text:"8"},
+        {value:"9", text:"9"},
+        {value:"10", text:"10 – ⚡️ voller Power"}
+      ],
+      fr: [
+        {value:"", text:"Veuillez choisir..."},
+        {value:"1", text:"1 – 😴 très fatigué"},
+        {value:"2", text:"2"},
+        {value:"3", text:"3"},
+        {value:"4", text:"4"},
+        {value:"5", text:"5"},
+        {value:"6", text:"6"},
+        {value:"7", text:"7"},
+        {value:"8", text:"8"},
+        {value:"9", text:"9"},
+        {value:"10", text:"10 – ⚡️ plein d'énergie"}
+      ],
+      en: [
+        {value:"", text:"Please select..."},
+        {value:"1", text:"1 – 😴 very tired"},
+        {value:"2", text:"2"},
+        {value:"3", text:"3"},
+        {value:"4", text:"4"},
+        {value:"5", text:"5"},
+        {value:"6", text:"6"},
+        {value:"7", text:"7"},
+        {value:"8", text:"8"},
+        {value:"9", text:"9"},
+        {value:"10", text:"10 – ⚡️ full power"}
+      ]
+    };
+    const intensityOptions = {
+      de: [
+        {value:"", text:"Bitte wählen..."},
+        {value:"1", text:"1 – sehr locker"},
+        {value:"2", text:"2"},
+        {value:"3", text:"3"},
+        {value:"4", text:"4"},
+        {value:"5", text:"5 – mittel"},
+        {value:"6", text:"6"},
+        {value:"7", text:"7"},
+        {value:"8", text:"8"},
+        {value:"9", text:"9"},
+        {value:"10", text:"10 – maximal"}
+      ],
+      fr: [
+        {value:"", text:"Veuillez choisir..."},
+        {value:"1", text:"1 – très facile"},
+        {value:"2", text:"2"},
+        {value:"3", text:"3"},
+        {value:"4", text:"4"},
+        {value:"5", text:"5 – moyen"},
+        {value:"6", text:"6"},
+        {value:"7", text:"7"},
+        {value:"8", text:"8"},
+        {value:"9", text:"9"},
+        {value:"10", text:"10 – maximal"}
+      ],
+      en: [
+        {value:"", text:"Please select..."},
+        {value:"1", text:"1 – very easy"},
+        {value:"2", text:"2"},
+        {value:"3", text:"3"},
+        {value:"4", text:"4"},
+        {value:"5", text:"5 – medium"},
+        {value:"6", text:"6"},
+        {value:"7", text:"7"},
+        {value:"8", text:"8"},
+        {value:"9", text:"9"},
+        {value:"10", text:"10 – maximum"}
+      ]
+    };
+    const performanceOptions = {
+      de: [
+        {value:"", text:"Bitte wählen..."},
+        {value:"1", text:"1 – ausbaufähig"},
+        {value:"2", text:"2 – mässig"},
+        {value:"3", text:"3 – okay"},
+        {value:"4", text:"4 – solide"},
+        {value:"5", text:"5 – gut"},
+        {value:"6", text:"6 – sehr gut"},
+        {value:"7", text:"7 – stark"},
+        {value:"8", text:"8 – super"},
+        {value:"9", text:"9 – fast optimal"},
+        {value:"10", text:"10 – top"}
+      ],
+      fr: [
+        {value:"", text:"Veuillez choisir..."},
+        {value:"1", text:"1 – améliorable"},
+        {value:"2", text:"2 – moyen"},
+        {value:"3", text:"3 – correct"},
+        {value:"4", text:"4 – solide"},
+        {value:"5", text:"5 – bon"},
+        {value:"6", text:"6 – très bon"},
+        {value:"7", text:"7 – fort"},
+        {value:"8", text:"8 – super"},
+        {value:"9", text:"9 – presque optimal"},
+        {value:"10", text:"10 – top"}
+      ],
+      en: [
+        {value:"", text:"Please select..."},
+        {value:"1", text:"1 – needs improvement"},
+        {value:"2", text:"2 – mediocre"},
+        {value:"3", text:"3 – okay"},
+        {value:"4", text:"4 – solid"},
+        {value:"5", text:"5 – good"},
+        {value:"6", text:"6 – very good"},
+        {value:"7", text:"7 – strong"},
+        {value:"8", text:"8 – super"},
+        {value:"9", text:"9 – almost perfect"},
+        {value:"10", text:"10 – top"}
+      ]
+    };
+
+    let currentLang = 'de';
+
+    function setLangActive(lang) {
+      document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+      const btn = document.getElementById('btn-' + lang);
+      if(btn) btn.classList.add('active');
+    }
+
+    function fillSelectOptions(selectElem, options) {
+      selectElem.innerHTML = "";
+      options.forEach(opt => {
+        const option = document.createElement("option");
+        option.value = opt.value;
+        option.textContent = opt.text;
+        selectElem.appendChild(option);
+      });
+    }
+
+    function changeLanguage(lang) {
+      currentLang = lang;
+      setLangActive(lang);
+
+      const t = translations[lang];
+
+      // Update text content for labels and buttons
+      document.getElementById('feedbackFormTitle').textContent = t.feedbackFormTitle;
+      document.getElementById('labelName').textContent = t.labelName;
+      document.getElementById('labelFeeling').textContent = t.labelFeeling;
+      document.getElementById('labelEnergy').textContent = t.labelEnergy;
+      document.getElementById('labelIntensity').textContent = t.labelIntensity;
+      document.getElementById('labelPerformance').textContent = t.labelPerformance;
+      document.getElementById('labelComment').textContent = t.labelComment;
+      document.getElementById('submitBtn').textContent = t.submitBtn;
+      document.getElementById('loginTitle').textContent = t.loginTitle;
+      document.getElementById('password').placeholder = t.passwordPlaceholder;
+      document.getElementById('loginBtn').textContent = t.loginBtn;
+      document.getElementById('feedbackSearch').placeholder = t.feedbackSearchPlaceholder;
+
+      // Update sort options
+      const sortField = document.getElementById('sortField');
+      sortField.innerHTML = `
+        <option value="date_desc">${t.sortDateDesc}</option>
+        <option value="date_asc">${t.sortDateAsc}</option>
+        <option value="name_az">${t.sortNameAZ}</option>
+        <option value="name_za">${t.sortNameZA}</option>
+      `;
+
+      // Fill selects with appropriate language options
+      fillSelectOptions(document.getElementById('feeling'), feelingOptions[lang]);
+      fillSelectOptions(document.getElementById('energy'), energyOptions[lang]);
+      fillSelectOptions(document.getElementById('intensity'), intensityOptions[lang]);
+      fillSelectOptions(document.getElementById('performance'), performanceOptions[lang]);
+
+      // Clear success and error messages
+      document.getElementById('feedback-success').textContent = "";
+      document.getElementById('login-msg').textContent = "";
+    }
+
+    // Feedback storage (in-memory)
+    let feedbackEntries = [];
+
+    function renderFeedbackList() {
+      const listDiv = document.getElementById('feedback-list');
+      const searchTerm = document.getElementById('feedbackSearch').value.toLowerCase();
+      const sortValue = document.getElementById('sortField').value;
+
+      // Filter by search term (name and comment)
+      let filtered = feedbackEntries.filter(entry =>
+        entry.name.toLowerCase().includes(searchTerm) ||
+        (entry.comment && entry.comment.toLowerCase().includes(searchTerm))
+      );
+
+      // Sort
+      filtered.sort((a,b) => {
+        switch(sortValue) {
+          case 'date_asc': return a.date - b.date;
+          case 'date_desc': return b.date - a.date;
+          case 'name_az': return a.name.localeCompare(b.name);
+          case 'name_za': return b.name.localeCompare(a.name);
+          default: return 0;
+        }
+      });
+
+      // Clear list
+      listDiv.innerHTML = "";
+
+      if(filtered.length === 0) {
+        listDiv.textContent = currentLang === 'de' ? "Keine Einträge gefunden." : currentLang === 'fr' ? "Aucune entrée trouvée." : "No entries found.";
+        return;
+      }
+
+      filtered.forEach(entry => {
+        const card = document.createElement('div');
+        card.className = 'feedback-card';
+
+        const header = document.createElement('div');
+        header.className = 'f-header';
+
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'f-name';
+        nameSpan.textContent = entry.name;
+
+        const dateSpan = document.createElement('span');
+        dateSpan.className = 'f-date';
+        dateSpan.textContent = new Date(entry.date).toLocaleDateString(currentLang);
+
+        header.appendChild(nameSpan);
+        header.appendChild(dateSpan);
+        card.appendChild(header);
+
+        const grid = document.createElement('div');
+        grid.className = 'f-grid';
+
+        function addField(label, value) {
+          const lbl = document.createElement('div');
+          lbl.className = 'f-label';
+          lbl.textContent = label + ":";
+          const val = document.createElement('div');
+          val.className = 'f-value';
+          val.textContent = value || "-";
+          grid.appendChild(lbl);
+          grid.appendChild(val);
+        }
+
+        const t = translations[currentLang];
+
+        addField(t.labelFeeling, entry.feeling);
+        addField(t.labelEnergy, entry.energy);
+        addField(t.labelIntensity, entry.intensity);
+        addField(t.labelPerformance, entry.performance);
+        addField(t.labelComment, entry.comment);
+
+        card.appendChild(grid);
+
+        listDiv.appendChild(card);
+      });
+    }
+
+    function checkPassword() {
+      const pwInput = document.getElementById('password');
+      const msgDiv = document.getElementById('login-msg');
+      const pw = pwInput.value.trim();
+      const correctPassword = "Coach7274"; // example password
+
+      if(pw === correctPassword) {
+        document.getElementById('login-section').style.display = 'none';
+        document.getElementById('dashboard-section').style.display = 'block';
+        msgDiv.textContent = "";
+        pwInput.value = "";
+        renderFeedbackList();
+      } else {
+        msgDiv.textContent = translations[currentLang].loginFailed;
+        msgDiv.style.color = 'var(--ehcb-red)';
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', function() {
+      let lang = localStorage.getItem('dashboard_lang') || 'de';
+      changeLanguage(lang);
+
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.onclick = function() {
+          lang = this.getAttribute('data-lang');
+          localStorage.setItem('dashboard_lang', lang);
+          changeLanguage(lang);
+        };
+      });
+
+      // Handle form submission
+      const form = document.getElementById('feedbackForm');
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const name = form.name.value.trim();
+        const feeling = form.feeling.value;
+        const energy = form.energy.value;
+        const intensity = form.intensity.value;
+        const performance = form.performance.value;
+        const comment = form.comment.value.trim();
+
+        if(!name || !feeling || !energy) {
+          alert(currentLang === 'de' ? "Bitte alle Pflichtfelder ausfüllen." : currentLang === 'fr' ? "Veuillez remplir tous les champs obligatoires." : "Please fill all required fields.");
+          return;
+        }
+
+        const entry = {
+          name, feeling, energy, intensity, performance, comment,
+          date: Date.now()
+        };
+
+        feedbackEntries.push(entry);
+
+        form.reset();
+        document.getElementById('feedback-success').textContent = translations[currentLang].feedbackSuccess;
+        setTimeout(() => {
+          document.getElementById('feedback-success').textContent = "";
+        }, 4000);
+      });
+
+      // Search and sort listeners
+      document.getElementById('feedbackSearch').addEventListener('input', renderFeedbackList);
+      document.getElementById('sortField').addEventListener('change', renderFeedbackList);
+    });
+
+    // Dark mode toggle
+    const body = document.body;
+    const darkToggle = document.getElementById('darkToggle');
+    const darkToggleLabel = document.getElementById('darkToggleLabel');
+    function setDarkMode(on) {
+      body.classList.toggle('dark-mode', on);
+      darkToggle.classList.toggle('active', on);
+      localStorage.setItem('ehcb_dashboard_darkmode', on ? '1' : '0');
+      darkToggleLabel.textContent = on ? '☀️' : '🌙';
+    }
+    darkToggle.addEventListener('click', () => setDarkMode(!body.classList.contains('dark-mode')));
+    darkToggle.addEventListener('keypress', e => { if(e.key === ' ' || e.key === 'Enter') setDarkMode(!body.classList.contains('dark-mode')); });
+    darkToggleLabel.addEventListener('click', () => setDarkMode(!body.classList.contains('dark-mode')));
+    if(localStorage.getItem('ehcb_dashboard_darkmode') === '1') setDarkMode(true);
+
+    // Loader-Demo (zeige/ausblenden mit showLoader(true/false))
+    function showLoader(show=true) {
+      document.getElementById('loader').style.display = show ? 'flex' : 'none';
+    }
+  </script>
+</body>
+</html>

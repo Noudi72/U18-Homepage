@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>📅 MIH Kalender U18</title>
+  <link rel="icon" href="ehcb-icon.png" type="image/png" />
+  <style>
+    :root {
+      --ehc-blue: #002b5c;
+      --ehc-yellow: #ffd600;
+      --ehc-red: #d0021b;
+      --ehc-white: #fff;
+      --ehc-shadow: 0 10px 40px #00183e44;
+      --ehc-gelb: #ffd600;
+    }
+    html, body {
+      margin: 0; padding: 0;
+      background: #f8fafc;
+      min-height: 100vh;
+      font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+      color: var(--ehc-blue);
+    }
+    body.dark-mode {
+      background: #091b30;
+      color: #fff;
+    }
+    .back-btn {
+      position: absolute;
+      top: 28px;
+      left: 32px;
+      z-index: 10;
+      background: #002b5c;
+      color: #ffd600;
+      font-weight: bold;
+      border: 2px solid #ffd600;
+      border-radius: 10px;
+      padding: 12px 32px 10px 20px;
+      font-size: 1.19rem;
+      text-decoration: none;
+      transition: background .18s, color .18s;
+      box-shadow: 0 2px 14px #0002;
+    }
+    .back-btn:hover { background: #ffd600; color: #002b5c; }
+    body.dark-mode .back-btn {
+      background: #222e4a;
+      color: #ffd600;
+      border-color: #ffd600;
+    }
+    body.dark-mode .back-btn:hover {
+      background: #ffd600; color: #002b5c;
+    }
+    header {
+      text-align: center;
+      padding: 2.5rem 1rem 1.0rem 1rem;
+      margin-bottom: 0.5rem;
+      position: relative;
+      background: #f7f9fb;
+    }
+    body.dark-mode header {
+      background: #101b29;
+    }
+    .logo {
+      width: 120px;
+      max-width: 100%;
+      height: auto;
+      margin: 0 auto 18px auto;
+      display: block;
+      filter: drop-shadow(0 5px 18px #0008);
+    }
+    h1#main-title {
+      font-size: 2.2rem;
+      font-weight: 900;
+      margin: 0 0 16px 0;
+      letter-spacing: 1px;
+      color: var(--ehc-blue);
+      text-align: center;
+    }
+    body.dark-mode h1#main-title {
+      color: var(--ehc-yellow);
+    }
+
+    /* Sprachleiste als Card, wie Dashboard */
+    .lang-switcher {
+      margin: 38px auto 18px auto;
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      align-items: center;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px #002d5b10;
+      padding: 0.6rem 1.6rem;
+      max-width: 420px;
+      position: relative;
+    }
+    body.dark-mode .lang-switcher {
+      background: #1b2940;
+    }
+    .lang-btn {
+      background: #fff;
+      color: #002b5c;
+      border: none;
+      border-radius: 8px;
+      padding: 9px 40px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 1px 8px #2222;
+      transition: background 0.18s, color 0.18s;
+      outline: none;
+      margin-bottom: 3px;
+    }
+    .lang-btn.active, .lang-btn:focus {
+      background: #ffd600; 
+      color: #002b5c;
+    }
+    .lang-btn:hover:not(.active) {
+      background: #d0021b;
+      color: #fff;
+    }
+    body.dark-mode .lang-btn {
+      background: #1b2940;
+      color: #ffd600;
+    }
+    body.dark-mode .lang-btn.active,
+    body.dark-mode .lang-btn:focus {
+      background: #ffd600;
+      color: #002b5c;
+    }
+    body.dark-mode .lang-btn:hover:not(.active) {
+      background: #d0021b;
+      color: #fff;
+    }
+
+    /* Darkmode Toggle (Slider!) */
+    .dark-toggle-wrap {
+      margin-left: 1.2rem;
+      display: flex;
+      align-items: center;
+    }
+    .dark-toggle-label {
+      font-size: 1.15rem;
+      color: #002b5c;
+      margin-left: 0.22em;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+      transition: color .3s;
+    }
+    body.dark-mode .dark-toggle-label { color: #ffd600; }
+    .toggle-switch {
+      width: 44px; height: 24px;
+      border-radius: 14px;
+      background: #bbb;
+      display: inline-block;
+      position: relative;
+      cursor: pointer;
+      margin-right: 0.2em;
+      transition: background .18s;
+      vertical-align: middle;
+    }
+    .toggle-switch .slider {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: #fff;
+      position: absolute;
+      top: 1px; left: 1px;
+      box-shadow: 0 1px 4px #0002;
+      transition: left .19s;
+    }
+    .toggle-switch.active { background: #d0021b;}
+    .toggle-switch.active .slider { left: 21px; background: #ffd600;}
+
+    @media (max-width: 700px) {
+      .back-btn {
+        top: 9px;
+        left: 8px;
+        padding: 6px 14px 5px 10px;
+        font-size: 1.01rem;
+        border-width: 2px;
+        border-radius: 8px;
+      }
+      .logo {
+        width: 75px;
+        margin-bottom: 8px;
+        margin-top: 6px;
+      }
+      header {
+        padding-top: 0.8rem;
+        padding-bottom: 0.5rem;
+      }
+      h1#main-title {
+        font-size: 1rem;
+        margin-bottom: 8px;
+      }
+      .lang-switcher {
+        gap: 10px;
+        margin-top: 18px;
+        padding: 0.6rem 0.4rem;
+        max-width: 98vw;
+      }
+      .lang-btn {
+        padding: 6px 16px;
+        font-size: 1rem;
+        border-radius: 8px;
+      }
+      .dark-toggle-wrap { margin-left: 0.5em;}
+    }
+
+    .main-content {
+      max-width: 800px; margin: 30px auto 0 auto; padding: 0 6px;
+    }
+    .card {
+      background: var(--ehc-blue);
+      color: var(--ehc-white);
+      border-radius: 28px;
+      box-shadow: var(--ehc-shadow);
+      padding: 26px 10px 10px 10px;
+      border: 2.8px solid var(--ehc-yellow);
+      margin: 0 auto;
+      position: relative;
+    }
+    .card h2 {
+      color: var(--ehc-yellow);
+      text-align: center;
+      font-size: 1.45rem;
+      font-weight: 800;
+      margin-bottom: 19px;
+    }
+    iframe {
+      border: 0; width: 100%; height: 540px;
+      background: #fff; border-radius: 15px; box-shadow: 0 4px 18px #002b5c33;
+      display: block;
+    }
+    .calendar-hint {
+      text-align:center;color:#ffe16b;font-size:0.98rem;margin-top:1.1rem;
+    }
+    body.dark-mode .calendar-hint {
+      color: #ffd600;
+    }
+    .yellow-slogan {
+      background: #ffd600;
+      color: #002b5c;
+      text-align: center;
+      font-size: 1.29rem;
+      font-weight: bold;
+      border-radius: 0;
+      width: 100vw;
+      max-width: none;
+      padding: 0.85rem 1rem 0.79rem 1rem;
+      letter-spacing: 1.4px;
+      box-shadow: 0 1px 7px #0002;
+      box-sizing: border-box;
+      overflow-x: hidden;
+      position: fixed;
+      left: 0; bottom: 44px;
+      z-index: 100;
+      border-top: 4px solid #d0021b;
+      transition: background .3s, color .3s;
+    }
+    body.dark-mode .yellow-slogan {
+      background: #111a29;
+      color: #ffd600;
+      border-top: 4px solid #ffd600;
+    }
+    footer {
+      text-align:center;
+      margin: 0 auto;
+      color: #002b5c;
+      background: #fff;
+      opacity: 0.69;
+      font-size: 1.03rem;
+      width: 100vw;
+      max-width: none;
+      box-sizing: border-box;
+      position: fixed;
+      left: 0; bottom: 0;
+      padding: 11px 0 6px 0;
+      z-index: 101;
+      border-top: 1.5px solid #e9ecf2;
+      transition: background .3s, color .3s;
+    }
+    body.dark-mode footer {
+      background: #151e2f;
+      color: #e3e6ec;
+      opacity: .97;
+    }
+    @media (max-width: 600px) {
+      .yellow-slogan { font-size: 1.05rem; padding: 0.7rem 0.2rem; }
+      footer { font-size: 0.87rem; }
+    }
+    /* Loader-Styles */
+    .loader-backdrop {
+      position: fixed;
+      z-index: 1000;
+      inset: 0;
+      background: rgba(7, 49, 102, 0.96);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.3s;
+    }
+    .svg-loader {
+      width: 72px;
+      height: 72px;
+      display: block;
+    }
+    .svg-loader circle {
+      fill: none;
+      stroke: #ffd600;
+      stroke-width: 7;
+      stroke-linecap: round;
+      stroke-dasharray: 180 60;
+      animation: spin-loader 1s linear infinite;
+    }
+    @keyframes spin-loader {
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <a class="back-btn" href="index.html" id="backBtn">← Zurück / Back</a>
+  <header>
+    <img src="wikinger.png" class="logo" alt="Logo" />
+    <h1 id="main-title">EHC BIEL-BIENNE U18-ELIT</h1>
+    <div class="lang-switcher">
+      <div class="lang-btns-row" style="display: flex; gap: 0.35rem;">
+        <button class="lang-btn" id="btn-de">DE</button>
+        <button class="lang-btn" id="btn-fr">FR</button>
+        <button class="lang-btn" id="btn-en">EN</button>
+      </div>
+      <div class="dark-toggle-wrap">
+        <span class="toggle-switch" id="darkToggle" tabindex="0" aria-label="Dark Mode Toggle">
+          <span class="slider"></span>
+        </span>
+        <span class="dark-toggle-label" id="darkToggleLabel" title="Dark Mode">🌙</span>
+      </div>
+    </div>
+  </header>
+  <div class="main-content">
+    <section class="card">
+      <h2 id="kalender-title">📅 MIH Kalender U18</h2>
+      <div id="loader" class="loader-backdrop">
+        <svg class="svg-loader" viewBox="0 0 64 64">
+          <circle cx="32" cy="32" r="28"/>
+        </svg>
+      </div>
+      <iframe id="kalender-frame"
+        src="https://calendar.google.com/calendar/embed?src=mubk4n72crsbuptn4drqpt77rjsial8g%40import.calendar.google.com&ctz=Europe%2FZurich&mode=AGENDA"
+        onload="document.getElementById('loader').style.display='none';">
+      </iframe>
+      <p class="calendar-hint" id="kalender-hint">
+        (Für eine bessere Übersicht rechts oben auf „Agenda“ klicken)
+      </p>
+    </section>
+  </div>
+  <div class="yellow-slogan" id="slogan">
+    "OUR STRENGTH IS OUR UNITY!"
+  </div>
+  <footer>
+    © 2025 EHC Biel-Bienne U18-Elit
+  </footer>
+  <script>
+    const translations = {
+      de: {
+        mainTitle: "EHC BIEL-BIENNE U18-ELIT",
+        kalenderTitle: "📅 MIH Kalender U18",
+        kalenderHint: "(Für eine bessere Übersicht rechts oben auf „Agenda“ klicken)",
+        slogan: "\"OUR STRENGTH IS OUR UNITY!\"",
+        back: "← Zurück"
+      },
+      fr: {
+        mainTitle: "EHC BIEL-BIENNE U18-ÉLITE",
+        kalenderTitle: "📅 Calendrier MIH U18",
+        kalenderHint: "(Pour une meilleure vue, cliquez en haut à droite sur « Agenda »)",
+        slogan: "\"NOTRE FORCE EST NOTRE UNITÉ !\"",
+        back: "← Retour"
+      },
+      en: {
+        mainTitle: "EHC BIEL-BIENNE U18-ELITE",
+        kalenderTitle: "📅 MIH Calendar U18",
+        kalenderHint: "(For a better overview, click “Agenda” top right)",
+        slogan: "\"OUR STRENGTH IS OUR UNITY!\"",
+        back: "← Back"
+      }
+    };
+
+    let currentLang = localStorage.getItem('kalender_lang') || 'de';
+    function changeLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('kalender_lang', lang);
+      document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+      if(document.getElementById('btn-' + lang)) {
+        document.getElementById('btn-' + lang).classList.add('active');
+      }
+      const t = translations[lang];
+      document.getElementById('main-title').textContent = t.mainTitle;
+      document.getElementById('kalender-title').textContent = t.kalenderTitle;
+      document.getElementById('kalender-hint').textContent = t.kalenderHint;
+      document.getElementById('slogan').textContent = t.slogan;
+      document.getElementById('backBtn').textContent = t.back;
+    }
+    window.addEventListener('DOMContentLoaded', () => { changeLanguage(currentLang); });
+
+    // Dark Mode Logic
+    const body = document.body;
+    const darkToggle = document.getElementById('darkToggle');
+    const darkToggleLabel = document.getElementById('darkToggleLabel');
+    function setDarkMode(on) {
+      body.classList.toggle('dark-mode', on);
+      darkToggle.classList.toggle('active', on);
+      localStorage.setItem('ehcb_kalender_darkmode', on ? '1' : '0');
+      darkToggleLabel.textContent = on ? '☀️' : '🌙';
+    }
+    darkToggle.addEventListener('click', () => setDarkMode(!body.classList.contains('dark-mode')));
+    darkToggle.addEventListener('keypress', e => { if(e.key === ' ' || e.key === 'Enter') setDarkMode(!body.classList.contains('dark-mode')); });
+    darkToggleLabel.addEventListener('click', () => setDarkMode(!body.classList.contains('dark-mode')));
+    // Beim Laden aktuellen Status setzen
+    if(localStorage.getItem('ehcb_kalender_darkmode') === '1') setDarkMode(true);
+  </script>
+</body>
+</html>

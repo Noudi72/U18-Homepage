@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Trainings – Infos – News</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" href="ehcb-icon.png" type="image/png" />
+  <link rel="stylesheet" href="style.css">
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+  <style>
+    header {
+      background: #f7f9fb;
+      box-shadow: none;
+      border: none;
+      width: 100%;
+      margin: 0 0 0 0;
+      padding: 0;
+    }
+    body.dark-mode header {
+      background: #101b29;
+    }
+    .header-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      max-width: 540px;
+      margin: 0 auto 0.5rem auto;
+      position: relative;
+      padding: 1.1rem 0 0.5rem 0;
+    }
+    .header-logo {
+      width: 110px;
+      margin: 0.8rem auto 0.2rem auto;
+      display: block;
+    }
+    .header-title {
+      color: #002d5b;
+      font-size: 2rem;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      margin-bottom: 0.1rem;
+      text-align: center;
+      text-shadow: none;
+    }
+    body.dark-mode .header-title {
+      color: #ffd600;
+      text-shadow: 0 2px 16px #000a;
+    }
+    /* Sprachleiste als Card */
+    .lang-switcher {
+      margin: 38px auto 0 auto;
+      display: flex;
+      gap: 0.45rem;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      flex-direction: row;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px #002d5b10;
+      padding: 0.6rem 1.6rem;
+      max-width: 420px;
+    }
+    body.dark-mode .lang-switcher {
+      background: #1b2940 !important;
+    }
+    .lang-btn {
+      background: #fff;
+      color: #002b5c;
+      border: none;
+      border-radius: 8px;
+      padding: 9px 40px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 1px 8px #2222;
+      transition: background 0.18s, color 0.18s;
+      outline: none;
+      margin-bottom: 3px;
+    }
+    .lang-btn.active, .lang-btn:focus {
+      background: #ffd600;
+      color: #002b5c;
+    }
+    .lang-btn:hover:not(.active) {
+      background: #d0021b;
+      color: #fff;
+    }
+    body.dark-mode .lang-btn {
+      background: #1b2940;
+      color: #ffd600;
+    }
+    body.dark-mode .lang-btn.active,
+    body.dark-mode .lang-btn:focus {
+      background: #ffd600;
+      color: #002b5c;
+    }
+    /* Darkmode Toggle (Slider) */
+    .dark-toggle-wrap {
+      margin-left: 1.2rem;
+      display: flex;
+      align-items: center;
+    }
+    .dark-toggle-label {
+      font-size: 1.15rem;
+      color: #002b5c;
+      margin-left: 0.22em;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+      transition: color .3s;
+    }
+    body.dark-mode .dark-toggle-label { color: #ffd600; }
+    .toggle-switch {
+      width: 44px; height: 24px;
+      border-radius: 14px;
+      background: #bbb;
+      display: inline-block;
+      position: relative;
+      cursor: pointer;
+      margin-right: 0.2em;
+      transition: background .18s;
+      vertical-align: middle;
+    }
+    .toggle-switch .slider {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: #fff;
+      position: absolute;
+      top: 1px; left: 1px;
+      box-shadow: 0 1px 4px #0002;
+      transition: left .19s;
+    }
+    .toggle-switch.active { background: #d0021b;}
+    .toggle-switch.active .slider { left: 21px; background: #ffd600;}
+    @media (max-width: 600px) {
+      .lang-switcher {
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        margin-top: 18px;
+        max-width: 98vw;
+        padding: 0.6rem 0.4rem;
+      }
+      .lang-btn {
+        padding: 6px 16px;
+        font-size: 1rem;
+        border-radius: 8px;
+      }
+      .dark-toggle-wrap { margin-left: 0.5em;}
+    }
+    /* (Weitere bestehende News/Card/Admin-Styles können bleiben wie in style.css!) */
+    .yellow-slogan {
+      background: #ffd600;
+      color: #002b5c;
+      text-align: center;
+      font-size: 1.29rem;
+      font-weight: bold;
+      border-radius: 0;
+      width: 100vw;
+      max-width: none;
+      padding: 0.85rem 1rem 0.79rem 1rem;
+      letter-spacing: 1.4px;
+      box-shadow: 0 1px 7px #0002;
+      box-sizing: border-box;
+      overflow-x: hidden;
+      position: fixed;
+      left: 0; bottom: 44px;
+      z-index: 100;
+      border-top: 4px solid #d0021b;
+      transition: background .3s, color .3s;
+    }
+    body.dark-mode .yellow-slogan {
+      background: #111a29;
+      color: #ffd600;
+      border-top: 4px solid #ffd600;
+    }
+    footer {
+      text-align:center;
+      margin: 0 auto;
+      color: #002d5b;
+      background: #fff;
+      opacity: 0.69;
+      font-size: 1.03rem;
+      width: 100vw;
+      max-width: none;
+      box-sizing: border-box;
+      position: fixed;
+      left: 0; bottom: 0;
+      padding: 11px 0 6px 0;
+      z-index: 101;
+      border-top: 1.5px solid #e9ecf2;
+      transition: background .3s, color .3s;
+    }
+    body.dark-mode footer {
+      background: #151e2f;
+      color: #e3e6ec;
+      opacity: .97;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <a class="back-btn" href="index.html" id="backBtn">← Back</a>
+      <img src="wikinger.png" class="header-logo" alt="Logo" />
+      <div class="header-title" id="main-title">EHC BIEL-BIENNE U18-ELIT</div>
+      <div class="lang-switcher">
+        <div class="lang-btns-row">
+          <button class="lang-btn" id="btn-de">DE</button>
+          <button class="lang-btn" id="btn-fr">FR</button>
+          <button class="lang-btn" id="btn-en">EN</button>
+        </div>
+        <div class="dark-toggle-wrap">
+          <span class="toggle-switch" id="darkToggle" tabindex="0" aria-label="Dark Mode Toggle">
+            <span class="slider"></span>
+          </span>
+          <span class="dark-toggle-label" id="darkToggleLabel" title="Dark Mode">🌙</span>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div class="main-content">
+    <section class="ehcb-card" style="margin-top: 1.5rem;">
+      <h2 id="allNewsLabel">Trainings – Infos – News</h2>
+      <div class="filter-sort-bar">
+        <input id="newsSearchInput" type="text" placeholder="Suche nach Titel oder Kommentar..." autocomplete="off">
+        <select id="newsSortSelect">
+          <option value="newest">Neuestes zuerst</option>
+          <option value="oldest">Ältestes zuerst</option>
+          <option value="title">Titel A–Z</option>
+        </select>
+      </div>
+      <div class="news-list" id="newsList"></div>
+    </section>
+    <div class="ehcb-card" style="margin-top: 0.5rem;">
+      <form id="adminLoginForm" autocomplete="off" style="margin:0;">
+        <div id="loginHeadline" style="font-size:1.1rem;font-weight:700;margin-bottom:0.7rem;">Coach-Login (Upload)</div>
+        <label for="adminPassword" id="passwordLabel">Passwort</label><br>
+        <input type="password" id="adminPassword" autocomplete="off"><br>
+        <button type="submit" id="loginBtn">Login</button>
+      </form>
+    </div>
+    <section id="uploadArea" class="upload-section" style="display:none;">
+      <div class="upload-box">
+        <h3 id="uploadTitle">PDF/Bild-Upload (nur für Admins)</h3>
+        <div id="uploadInstr">Ziehe eine PDF- oder Bilddatei (PNG/JPEG) hierher oder klicke zum Auswählen.</div>
+        <form class="upload-form" id="uploadForm" autocomplete="off" style="margin-bottom:0;">
+          <input type="file" id="pdfFile" accept="application/pdf,image/png,image/jpeg" style="display:none;" required>
+          <div class="progress-bar"><div id="progressBarInner" class="progress-bar-inner"></div></div>
+          <button id="uploadBtn" type="button">Datei auswählen</button>
+        </form>
+        <form class="upload-form" id="metaForm" autocomplete="off" style="display:none; margin-top:1.2rem;">
+          <label id="pdfTitleLabel" for="pdfTitle">Titel</label><br>
+          <input type="text" id="pdfTitle" maxlength="60"><br>
+          <label id="pdfCommentLabel" for="pdfComment">Kommentar</label><br>
+          <textarea id="pdfComment" rows="2" maxlength="180"></textarea><br>
+          <button id="saveMetaBtn" type="submit">Speichern</button>
+        </form>
+      </div>
+    </section>
+    <button id="logoutBtn" class="logout-btn" style="display:none;">Logout</button>
+  </div>
+  <div class="yellow-slogan" id="slogan">
+    "OUR STRENGTH IS OUR UNITY!"
+  </div>
+  <footer>
+    © 2025 EHC Biel-Bienne U18-Elit
+  </footer>
+  <script>
+    // Übersetzungen
+    const translations = {
+      de: {
+        mainTitle: "EHC BIEL-BIENNE U18-ELIT",
+        allNews: "Trainings – Infos – News",
+        uploadTitle: "PDF/Bild-Upload (nur für Admins)",
+        uploadInstr: "Ziehe eine PDF- oder Bilddatei (PNG/JPEG) hierher oder klicke zum Auswählen.",
+        pdfTitle: "Titel",
+        pdfComment: "Kommentar",
+        uploadBtn: "Datei auswählen",
+        uploading: "Wird hochgeladen...",
+        loginHeadline: "Coach-Login (Upload)",
+        password: "Passwort",
+        loginBtn: "Login",
+        logoutBtn: "Logout",
+        uploadSuccess: "Upload erfolgreich!",
+        uploadError: "Fehler beim Upload.",
+        download: "Download",
+        date: "Upload-Datum",
+        noNews: "Noch keine News/Infos vorhanden.",
+        back: "← Back"
+      },
+      fr: {
+        mainTitle: "EHC BIEL-BIENNE U18-ÉLITE",
+        allNews: "Fichiers, infos, news",
+        uploadTitle: "Téléchargement PDF/Image (admins seulement)",
+        uploadInstr: "Glissez un fichier PDF ou une image ici ou cliquez pour choisir.",
+        pdfTitle: "Titre",
+        pdfComment: "Commentaire",
+        uploadBtn: "Télécharger",
+        uploading: "Téléchargement...",
+        loginHeadline: "Connexion coach (Upload)",
+        password: "Mot de passe",
+        loginBtn: "Connexion",
+        logoutBtn: "Déconnexion",
+        uploadSuccess: "Téléchargement réussi !",
+        uploadError: "Erreur lors du téléchargement.",
+        download: "Télécharger",
+        date: "Date de téléchargement",
+        noNews: "Aucune info disponible.",
+        back: "← Retour"
+      },
+      en: {
+        mainTitle: "EHC BIEL-BIENNE U18-ELITE",
+        allNews: "Training – Info – News",
+        uploadTitle: "PDF/Image Upload (Admins only)",
+        uploadInstr: "Drag a PDF or image file here or click to select.",
+        pdfTitle: "Title",
+        pdfComment: "Comment",
+        uploadBtn: "Select file",
+        uploading: "Uploading...",
+        loginHeadline: "Coach login (Upload)",
+        password: "Password",
+        loginBtn: "Login",
+        logoutBtn: "Logout",
+        uploadSuccess: "Upload successful!",
+        uploadError: "Upload failed.",
+        download: "Download",
+        date: "Upload date",
+        noNews: "No news/info available yet.",
+        back: "← Back"
+      }
+    };
+    let currentLang = localStorage.getItem('news_lang') || 'de';
+    function setLang(lang) {
+      currentLang = lang;
+      localStorage.setItem('news_lang', lang);
+      document.documentElement.lang = lang;
+      document.getElementById('main-title').textContent = translations[lang].mainTitle;
+      document.getElementById('allNewsLabel').textContent = translations[lang].allNews;
+      document.getElementById('uploadTitle').textContent = translations[lang].uploadTitle;
+      document.getElementById('uploadInstr').textContent = translations[lang].uploadInstr;
+      document.getElementById('pdfTitleLabel').textContent = translations[lang].pdfTitle;
+      document.getElementById('pdfCommentLabel').textContent = translations[lang].pdfComment;
+      document.getElementById('uploadBtn').textContent = translations[lang].uploadBtn;
+      document.getElementById('passwordLabel').textContent = translations[lang].password;
+      document.getElementById('loginBtn').textContent = translations[lang].loginBtn;
+      document.getElementById('logoutBtn').textContent = translations[lang].logoutBtn;
+      document.getElementById('backBtn').textContent = translations[lang].back;
+      document.getElementById('loginHeadline').textContent = translations[lang].loginHeadline;
+      renderNewsList(window._newsList || []);
+    }
+    window.addEventListener('DOMContentLoaded', () => { setLang(currentLang); });
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.onclick = () => setLang(btn.id.replace('btn-',''));
+    });
+
+    // --- FIREBASE INIT ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyCCvHZN1q72UQLqrkgWb-L5X6A4WesHqRw",
+      authDomain: "ehcb-news.firebaseapp.com",
+      projectId: "ehcb-news",
+      storageBucket: "ehcb-news.appspot.com",
+      messagingSenderId: "250325515447",
+      appId: "1:250325515447:web:81f10ce4ac286d10b92132"
+    };
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+
+    // --- ADMIN LOGIN ---
+    let isAdmin = false;
+    function showAdminUI(show) {
+      document.getElementById('uploadArea').style.display = show ? '' : 'none';
+      document.getElementById('logoutBtn').style.display = show ? '' : 'none';
+      document.getElementById('adminLoginForm').style.display = show ? 'none' : '';
+      renderNewsList(window._newsList || []);
+    }
+    function handleLogin(e) {
+      e.preventDefault();
+      const pw = document.getElementById('adminPassword').value;
+      if (pw === "Coach7274") {
+        isAdmin = true;
+        showAdminUI(true);
+        listenToNews();
+      } else {
+        alert("Falsches Passwort / Wrong password / Mauvais mot de passe");
+      }
+    }
+    function handleLogout() {
+      isAdmin = false;
+      showAdminUI(false);
+      listenToNews();
+    }
+    document.getElementById('adminLoginForm').onsubmit = handleLogin;
+    document.getElementById('logoutBtn').onclick = handleLogout;
+
+    // --- FILE UPLOAD LOGIK ---
+    let uploadedFileURL = null;
+    let uploadedFileType = null;
+    function handleFileSelected(file) {
+      if (!file) return;
+      const allowedTypes = ['application/pdf', 'image/png', 'image/jpeg'];
+      if (!allowedTypes.includes(file.type)) {
+        alert('Bitte nur PDF, PNG oder JPEG-Dateien!');
+        return;
+      }
+      document.getElementById('uploadBtn').disabled = true;
+      document.getElementById('uploadBtn').textContent = translations[currentLang].uploading;
+      const bar = document.getElementById('progressBarInner');
+      bar.style.width = "0%";
+      const ts = Date.now();
+      let folder = 'news-files';
+      if (file.type === 'application/pdf') folder = 'news-pdfs';
+      else if (file.type === 'image/png' || file.type === 'image/jpeg') folder = 'news-images';
+      const storageRef = storage.ref().child(`${folder}/${ts}_${file.name}`);
+      const uploadTask = storageRef.put(file);
+      uploadTask.on('state_changed', snapshot => {
+        const percent = Math.round(snapshot.bytesTransferred / snapshot.totalBytes * 100);
+        bar.style.width = percent + "%";
+      }, err => {
+        alert(translations[currentLang].uploadError);
+        document.getElementById('uploadBtn').disabled = false;
+        document.getElementById('uploadBtn').textContent = translations[currentLang].uploadBtn;
+      }, () => {
+        uploadTask.snapshot.ref.getDownloadURL().then(url => {
+          uploadedFileURL = url;
+          uploadedFileType = file.type;
+          document.getElementById('uploadBtn').disabled = false;
+          document.getElementById('uploadBtn').textContent = translations[currentLang].uploadSuccess;
+          document.getElementById('metaForm').style.display = '';
+        });
+      });
+    }
+    function resetUploadStep() {
+      uploadedFileURL = null;
+      uploadedFileType = null;
+      document.getElementById('uploadForm').reset();
+      document.getElementById('metaForm').reset();
+      document.getElementById('metaForm').style.display = 'none';
+      document.getElementById('uploadBtn').textContent = translations[currentLang].uploadBtn;
+      document.getElementById('progressBarInner').style.width = "0%";
+    }
+    function handleMetaSave(e) {
+      e.preventDefault();
+      if (!uploadedFileURL || !uploadedFileType) {
+        alert('Bitte zuerst eine Datei hochladen!');
+        return;
+      }
+      const title = document.getElementById('pdfTitle').value.trim();
+      const comment = document.getElementById('pdfComment').value.trim();
+      if (!title) {
+        alert('Bitte Titel angeben!');
+        return;
+      }
+      const ts = Date.now();
+      document.getElementById('saveMetaBtn').disabled = true;
+      db.collection('news').add({
+        title: title,
+        comment: comment,
+        url: uploadedFileURL,
+        fileType: uploadedFileType,
+        timestamp: ts
+      }).then(() => {
+        resetUploadStep();
+        document.getElementById('saveMetaBtn').disabled = false;
+      }).catch(() => {
+        alert(translations[currentLang].uploadError);
+        document.getElementById('saveMetaBtn').disabled = false;
+      });
+    }
+    // Upload events (Drag & Drop, Button etc.)
+    const uploadArea = document.getElementById('uploadArea');
+    uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+    uploadArea.addEventListener('dragleave', e => { e.preventDefault(); uploadArea.classList.remove('dragover'); });
+    uploadArea.addEventListener('drop', e => {
+      e.preventDefault(); uploadArea.classList.remove('dragover');
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        handleFileSelected(e.dataTransfer.files[0]);
+      }
+    });
+    uploadArea.addEventListener('click', e => {
+      if (e.target.closest('#metaForm')) return;
+      if (e.target.closest('#uploadBtn')) return;
+      document.getElementById('pdfFile').click();
+    });
+    document.getElementById('pdfFile').addEventListener('change', e => {
+      if (e.target.files && e.target.files.length > 0) handleFileSelected(e.target.files[0]);
+    });
+    document.getElementById('uploadBtn').onclick = e => {
+      e.stopPropagation();
+      document.getElementById('pdfFile').click();
+    };
+    document.getElementById('metaForm').onsubmit = handleMetaSave;
+    resetUploadStep();
+
+    // --- News List (Anzeige) ---
+    let newsFilterText = "";
+    let newsSortMode = "newest";
+    function renderNewsList(newsList) {
+      window._newsList = newsList;
+      let filtered = newsList;
+      if (newsFilterText && newsFilterText.trim().length > 0) {
+        const search = newsFilterText.trim().toLowerCase();
+        filtered = filtered.filter(item =>
+          (item.title && item.title.toLowerCase().includes(search)) ||
+          (item.comment && item.comment.toLowerCase().includes(search))
+        );
+      }
+      let sorted = filtered.slice();
+      if (newsSortMode === "newest") {
+        sorted.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+      } else if (newsSortMode === "oldest") {
+        sorted.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+      } else if (newsSortMode === "title") {
+        sorted.sort((a, b) =>
+          (a.title || "").localeCompare(b.title || "", currentLang, { sensitivity: "base" })
+        );
+      }
+      const listDiv = document.getElementById('newsList');
+      listDiv.innerHTML = "";
+      if (!sorted.length) {
+        const p = document.createElement('p');
+        p.textContent = translations[currentLang].noNews;
+        listDiv.appendChild(p);
+        return;
+      }
+      sorted.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'news-card';
+        const title = document.createElement('div');
+        title.className = 'title';
+        title.textContent = item.title;
+        const date = document.createElement('div');
+        date.className = 'date';
+        const d = new Date(item.timestamp);
+        date.textContent = translations[currentLang].date + ": " + d.toLocaleDateString(currentLang, { year: 'numeric', month: 'short', day: 'numeric' });
+        const comment = document.createElement('div');
+        comment.className = 'comment';
+        comment.textContent = item.comment;
+        let preview = null;
+        let thumbnail = null;
+        let fileType = item.fileType;
+        if (!fileType && item.url) {
+          if (item.url.match(/\.pdf(\?|$)/i)) fileType = 'application/pdf';
+          else if (item.url.match(/\.png(\?|$)/i)) fileType = 'image/png';
+          else if (item.url.match(/\.jpe?g(\?|$)/i)) fileType = 'image/jpeg';
+        }
+        if (fileType === 'application/pdf') {
+          preview = document.createElement('a');
+          preview.className = 'preview-link';
+          preview.href = item.url;
+          preview.target = "_blank";
+          preview.textContent = '👁 Vorschau';
+        }
+        if (fileType === 'image/png' || fileType === 'image/jpeg') {
+          thumbnail = document.createElement('img');
+          thumbnail.src = item.url;
+          thumbnail.alt = 'Bildvorschau';
+        }
+        const link = document.createElement('a');
+        link.className = 'download-link';
+        link.href = item.url;
+        link.target = "_blank";
+        link.download = "";
+        link.textContent = translations[currentLang].download;
+        card.appendChild(title);
+        card.appendChild(date);
+        if (item.comment) card.appendChild(comment);
+        if (thumbnail) card.appendChild(thumbnail);
+        if (preview) card.appendChild(preview);
+        card.appendChild(link);
+        if (isAdmin && item.id) {
+          const delBtn = document.createElement('button');
+          delBtn.textContent = "🗑 Löschen";
+          delBtn.className = 'delete-btn';
+          delBtn.onclick = () => {
+            if (confirm('Wirklich löschen?')) {
+              storage.refFromURL(item.url).delete().catch(()=>{});
+              db.collection('news').doc(item.id).delete();
+            }
+          };
+          card.appendChild(delBtn);
+        }
+        listDiv.appendChild(card);
+      });
+    }
+    // Filter-/Sortier-Einstellungen initialisieren
+    const searchInput = document.getElementById('newsSearchInput');
+    const sortSelect = document.getElementById('newsSortSelect');
+    if (window.localStorage) {
+      const savedFilter = localStorage.getItem('newsFilterText');
+      const savedSort = localStorage.getItem('newsSortMode');
+      if (typeof savedFilter === "string") {
+        newsFilterText = savedFilter;
+        searchInput.value = savedFilter;
+      }
+      if (typeof savedSort === "string" && ["newest", "oldest", "title"].includes(savedSort)) {
+        newsSortMode = savedSort;
+        sortSelect.value = savedSort;
+      }
+    }
+    searchInput.addEventListener('input', function() {
+      newsFilterText = this.value;
+      if (window.localStorage) localStorage.setItem('newsFilterText', newsFilterText);
+      renderNewsList(window._newsList || []);
+    });
+    sortSelect.addEventListener('change', function() {
+      newsSortMode = this.value;
+      if (window.localStorage) localStorage.setItem('newsSortMode', newsSortMode);
+      renderNewsList(window._newsList || []);
+    });
+
+    // --- Firestore News Listener ---
+    let newsUnsubscribe = null;
+    function listenToNews() {
+      if (typeof newsUnsubscribe === "function") newsUnsubscribe();
+      newsUnsubscribe = db.collection('news').orderBy('timestamp', 'desc')
+        .onSnapshot((snapshot) => {
+          const newsList = [];
+          snapshot.forEach(doc => {
+            newsList.push({ ...doc.data(), id: doc.id });
+          });
+          renderNewsList(newsList);
+        });
+    }
+    listenToNews();
+    window.addEventListener('pageshow', function(event) {
+      if (event.persisted) window.location.reload();
+    });
+    // Dark Mode Logic
+    const body = document.body;
+    const darkToggle = document.getElementById('darkToggle');
+    const darkToggleLabel = document.getElementById('darkToggleLabel');
+    function setDarkMode(on) {
+      body.classList.toggle('dark-mode', on);
+      darkToggle.classList.toggle('active', on);
+      localStorage.setItem('ehcb_news_darkmode', on ? '1' : '0');
+      darkToggleLabel.textContent = on ? '☀️' : '🌙';
+    }
+    darkToggle.addEventListener('click', () => setDarkMode(!body.classList.contains('dark-mode')));
+    darkToggle.addEventListener('keypress', e => { if(e.key === ' ' || e.key === 'Enter') setDarkMode(!body.classList.contains('dark-mode')); });
+    darkToggleLabel.addEventListener('click', () => setDarkMode(!body.classList.contains('dark-mode')));
+    if(localStorage.getItem('ehcb_news_darkmode') === '1') setDarkMode(true);
+  </script>
+</body>
+</html>
