@@ -463,33 +463,53 @@
       // Handle form submission
       const form = document.getElementById('feedbackForm');
       form.addEventListener('submit', function(e) {
-        e.preventDefault();
+  e.preventDefault();
 
-        const name = form.name.value.trim();
-        const feeling = form.feeling.value;
-        const energy = form.energy.value;
-        const intensity = form.intensity.value;
-        const performance = form.performance.value;
-        const comment = form.comment.value.trim();
+  const name = form.name.value.trim();
+  const feeling = form.feeling.value;
+  const energy = form.energy.value;
+  const intensity = form.intensity.value;
+  const performance = form.performance.value;
+  const comment = form.comment.value.trim();
 
-        if(!name || !feeling || !energy) {
-          alert(currentLang === 'de' ? "Bitte alle Pflichtfelder ausfüllen." : currentLang === 'fr' ? "Veuillez remplir tous les champs obligatoires." : "Please fill all required fields.");
-          return;
-        }
+  if(!name || !feeling || !energy) {
+    alert(currentLang === 'de' ? "Bitte alle Pflichtfelder ausfüllen." : currentLang === 'fr' ? "Veuillez remplir tous les champs obligatoires." : "Please fill all required fields.");
+    return;
+  }
 
-        const entry = {
-          name, feeling, energy, intensity, performance, comment,
-          date: Date.now()
-        };
+  // Sende das Feedback an dein Google Apps Script!
+  const params =
+    '?action=add'
+    + '&name=' + encodeURIComponent(name)
+    + '&feeling=' + encodeURIComponent(feeling)
+    + '&energy=' + encodeURIComponent(energy)
+    + '&intensity=' + encodeURIComponent(intensity)
+    + '&performance=' + encodeURIComponent(performance)
+    + '&comment=' + encodeURIComponent(comment)
+    + '&timestamp=' + Date.now();
 
-        feedbackEntries.push(entry);
+  const scriptUrl = 'https://script.google.com/macros/s/AKfycbwzVEiz_VQlUjAP2RNlxUZG0sI4g4cl1B6eirOic5veGoCLgVVE_hSfD7Y9yg8Q17DM/exec';
 
-        form.reset();
-        document.getElementById('feedback-success').textContent = translations[currentLang].feedbackSuccess;
-        setTimeout(() => {
-          document.getElementById('feedback-success').textContent = "";
-        }, 4000);
-      });
+  fetch(scriptUrl + params, { method: 'POST' })
+    .then(r => r.json ? r.json() : r.text())
+    .then(() => {
+      // Feedback lokal speichern und anzeigen
+      const entry = {
+        name, feeling, energy, intensity, performance, comment,
+        date: Date.now()
+      };
+      feedbackEntries.push(entry);
+      form.reset();
+      document.getElementById('feedback-success').textContent = translations[currentLang].feedbackSuccess;
+      setTimeout(() => {
+        document.getElementById('feedback-success').textContent = "";
+      }, 4000);
+      renderFeedbackList();
+    })
+    .catch(() => {
+      alert("Übertragung fehlgeschlagen!");
+    });
+});
 
       // Search and sort listeners
       document.getElementById('feedbackSearch').addEventListener('input', renderFeedbackList);
