@@ -488,11 +488,20 @@ body.dark-mode .back-btn:hover {
 
 .diary-card .emoji { font-size: 1.5em; vertical-align: middle; }
 
-/* DARK MODE Diary Card */
+/* Diary Card Dark Mode: Heller & mehr Kontrast */
 body.dark-mode .diary-card {
-  background: #172133;   /* dunkler, aber nicht zu dunkel */
-  color: #fff !important;   /* Text immer weiss */
+  background: #20304a !important; /* Noch etwas heller als vorher */
+  color: #fff !important;         /* Immer reinweiss */
   border-color: var(--ehcb-yellow);
+  box-shadow: 0 6px 22px #0005;
+}
+
+body.dark-mode .diary-card .diary-date,
+body.dark-mode .diary-card .diary-text,
+body.dark-mode .diary-card .diary-actions,
+body.dark-mode .diary-card .emoji {
+  color: #fff !important;
+  text-shadow: 0 1px 2px #0009;
 }
 
 body.dark-mode .diary-card .emoji {
