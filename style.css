@@ -418,5 +418,113 @@ body.dark-mode .back-btn:hover {
   background: var(--ehcb-yellow);
   color: #002b5c;
 }
+.back-btn {
+  display: inline-block;
+  padding: 0.7em 1.4em 0.7em 1.2em;
+  background: var(--ehcb-blue);
+  color: var(--ehcb-yellow);
+  font-size: 1.12rem;
+  font-weight: bold;
+  border-radius: 15px;
+  border: 2.5px solid var(--ehcb-yellow);
+  box-shadow: 0 4px 18px -8px #002d5b30;
+  text-decoration: none;
+  transition: all 0.15s cubic-bezier(.7,.3,.3,.9);
+  margin: 1.2rem 0 0 1.2rem;
+  letter-spacing: 0.01em;
+  position: absolute;
+  top: 28px;
+  left: 32px;
+  z-index: 10;
+}
+.back-btn:before {
+  content: '';
+  display: inline-block;
+  vertical-align: middle;
+  width: 1.5em;
+  height: 1.5em;
+  margin-right: 0.4em;
+  background: url('data:image/svg+xml;utf8,<svg fill=\"none\" stroke=\"%23002d5b\" stroke-width=\"3\" viewBox=\"0 0 28 28\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M19 25l-9.5-10L19 3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>') no-repeat center/1.2em 1.2em;
+  filter: drop-shadow(0 1px 2px #0003);
+}
+.back-btn:hover, .back-btn:focus {
+  background: var(--ehcb-yellow);
+  color: var(--ehcb-blue);
+  border-color: var(--ehcb-red);
+  transform: translateY(-2px) scale(1.045);
+  box-shadow: 0 8px 24px -6px #d0021b30;
+  outline: none;
+}
+.back-btn:active {
+  background: #ffd000;
+  color: #002d5b;
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 0 2px 10px -2px #002d5b20;
+}
+@media (max-width: 600px) {
+  .back-btn {
+    left: 0;
+    right: 0;
+    margin: 1.2rem auto 0 auto;
+    display: block;
+    position: static;
+    text-align: center;
+  }
+}
+/* Diary Cards optimieren (Lesbarkeit) */
+.diary-card {
+  background: #fff;
+  color: #002d5b;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px #002d5b18;
+  margin: 24px 0;
+  padding: 1.6rem 1.2rem 1.7rem 1.2rem;
+  font-size: 1.12rem;
+  font-weight: 600;
+  line-height: 1.5;
+  border: 2.2px solid var(--ehcb-yellow);
+  transition: background .25s, color .25s;
+}
 
+.diary-card .emoji { font-size: 1.5em; vertical-align: middle; }
+
+/* DARK MODE Diary Card */
+body.dark-mode .diary-card {
+  background: #172133;   /* dunkler, aber nicht zu dunkel */
+  color: #fff !important;   /* Text immer weiss */
+  border-color: var(--ehcb-yellow);
+}
+
+body.dark-mode .diary-card .emoji {
+  filter: drop-shadow(0 1px 2px #0007);
+}
+/* Bessere Lesbarkeit für Labels & Felder im Dark Mode */
+body.dark-mode label,
+body.dark-mode .form-block label {
+  color: #fff !important;
+  text-shadow: 0 1px 3px #0005;
+}
+
+/* Alle Inputs, Selects und Textareas in Dark Mode aufhellen */
+body.dark-mode input[type="text"],
+body.dark-mode input[type="password"],
+body.dark-mode select,
+body.dark-mode textarea {
+  background: #222e40 !important;
+  color: #fff !important;
+  border-color: #ffe066 !important;
+  box-shadow: 0 2px 10px #0002;
+}
+
+body.dark-mode input[type="text"]::placeholder,
+body.dark-mode input[type="password"]::placeholder,
+body.dark-mode textarea::placeholder {
+  color: #ccc !important;
+  opacity: 1;
+}
+
+body.dark-mode select {
+  /* Pfeil/Dropdown bleibt sichtbar */
+  color-scheme: dark;
+}
 /* ENDE Style */
