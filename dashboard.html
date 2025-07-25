@@ -52,6 +52,84 @@
     margin: 0 auto 22px auto;
     text-shadow: none;
   }
+
+  /* ---- Dashboard-specific form & card block (boxed look, red border, shadow) ---- */
+  .form-block,
+  .login-card {
+    background: var(--ehcb-white);
+    border: 2.2px solid var(--ehcb-red);
+    border-radius: 17px;
+    box-shadow: 0 2px 18px #0002, 0 0px 0px #fff;
+    max-width: 410px;
+    margin: 0 auto 2.2rem auto;
+    padding: 2.0rem 2.1rem 1.5rem 2.1rem;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+  }
+  .login-card {
+    margin-bottom: 2.6rem;
+    margin-top: 0.3rem;
+  }
+  @media (max-width: 600px) {
+    .form-block,
+    .login-card {
+      max-width: 97vw;
+      width: 98vw;
+      padding: 1.18rem 0.9rem 1.25rem 0.9rem;
+      border-radius: 13px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 2px 14px #0002;
+    }
+    .login-card {
+      margin-bottom: 2.1rem;
+      margin-top: 0.12rem;
+    }
+  }
+
+  /* ---- Dashboard-specific language buttons (match kalender.html style) ---- */
+  .lang-btns-row {
+    display: flex;
+    gap: 0.7rem;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0;
+    margin-top: 0.5rem;
+  }
+  .lang-btn {
+    background: var(--ehcb-white);
+    color: var(--ehcb-blue);
+    border: 2.2px solid var(--ehcb-yellow);
+    border-radius: 12px;
+    box-shadow: 0 2px 9px #0001;
+    padding: 0.62rem 1.45rem;
+    font-size: 1.13rem;
+    font-weight: bold;
+    outline: none;
+    transition: background 0.18s, color 0.18s, border 0.18s;
+    margin: 0;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    position: relative;
+    min-width: 62px;
+    text-align: center;
+    display: inline-block;
+    box-sizing: border-box;
+  }
+  .lang-btn.active,
+  .lang-btn:focus,
+  .lang-btn[aria-pressed="true"] {
+    background: var(--ehcb-yellow);
+    color: var(--ehcb-blue-dark);
+    border: 2.2px solid var(--ehcb-yellow);
+    font-weight: bold;
+  }
+  .lang-btn:hover {
+    background: var(--ehcb-yellow);
+    color: var(--ehcb-blue-dark);
+    border-color: var(--ehcb-red);
+  }
   </style>
   <header>
     <img src="wikinger.png" class="header-logo" alt="Logo" />
