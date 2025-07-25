@@ -26,29 +26,34 @@
       color: #fff;
     }
     .back-btn {
-      position: absolute;
-      top: 28px;
-      left: 32px;
-      z-index: 10;
-      background: #002b5c;
-      color: #ffd600;
-      font-weight: bold;
+      position: fixed;
+      top: 22px;
+      left: 20px;
+      z-index: 12;
+      background: #fff;
+      color: #002d5b;
+      padding: 10px 21px 10px 13px;
+      font-size: 1.09rem;
       border: 2px solid #ffd600;
-      border-radius: 10px;
-      padding: 12px 32px 10px 20px;
-      font-size: 1.19rem;
+      border-radius: 18px;
       text-decoration: none;
-      transition: background .18s, color .18s;
-      box-shadow: 0 2px 14px #0002;
+      font-weight: bold;
+      transition: background .2s, color .2s, border .2s;
+      box-shadow: 0 2px 12px #0002;
+      display: inline-block;
     }
-    .back-btn:hover { background: #ffd600; color: #002b5c; }
-    body.dark-mode .back-btn {
-      background: #222e4a;
-      color: #ffd600;
-      border-color: #ffd600;
+    .back-btn:hover {
+      background: #ffd600;
+      color: #002d5b;
+      border-color: #d0021b;
     }
-    body.dark-mode .back-btn:hover {
-      background: #ffd600; color: #002b5c;
+    .back-btn:before {
+      content: '←';
+      display: inline-block;
+      margin-right: 0.48em;
+      font-weight: bold;
+      font-size: 1.13em;
+      vertical-align: middle;
     }
     header {
       text-align: center;
@@ -179,7 +184,7 @@
         padding: 6px 14px 5px 10px;
         font-size: 1.01rem;
         border-width: 2px;
-        border-radius: 8px;
+        border-radius: 12px;
       }
       .logo {
         width: 75px;
@@ -317,10 +322,11 @@
     @keyframes spin-loader {
       100% { transform: rotate(360deg); }
     }
+
   </style>
 </head>
 <body>
-  <a class="back-btn" href="index.html" id="backBtn">← Zurück / Back</a>
+  <a href="index.html" class="back-btn">Back</a>
   <header>
     <img src="wikinger.png" class="logo" alt="Logo" />
     <h1 id="main-title">EHC BIEL-BIENNE U18-ELIT</h1>
@@ -368,21 +374,21 @@
         kalenderTitle: "📅 MIH Kalender U18",
         kalenderHint: "(Für eine bessere Übersicht rechts oben auf „Agenda“ klicken)",
         slogan: "\"OUR STRENGTH IS OUR UNITY!\"",
-        back: "← Zurück"
+        back: "Zurück"
       },
       fr: {
         mainTitle: "EHC BIEL-BIENNE U18-ÉLITE",
         kalenderTitle: "📅 Calendrier MIH U18",
         kalenderHint: "(Pour une meilleure vue, cliquez en haut à droite sur « Agenda »)",
         slogan: "\"NOTRE FORCE EST NOTRE UNITÉ !\"",
-        back: "← Retour"
+        back: "Retour"
       },
       en: {
         mainTitle: "EHC BIEL-BIENNE U18-ELITE",
         kalenderTitle: "📅 MIH Calendar U18",
         kalenderHint: "(For a better overview, click “Agenda” top right)",
         slogan: "\"OUR STRENGTH IS OUR UNITY!\"",
-        back: "← Back"
+        back: "Back"
       }
     };
 
@@ -399,7 +405,6 @@
       document.getElementById('kalender-title').textContent = t.kalenderTitle;
       document.getElementById('kalender-hint').textContent = t.kalenderHint;
       document.getElementById('slogan').textContent = t.slogan;
-      document.getElementById('backBtn').textContent = t.back;
     }
     window.addEventListener('DOMContentLoaded', () => { changeLanguage(currentLang); });
 

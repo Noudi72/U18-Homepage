@@ -201,12 +201,51 @@
       color: #e3e6ec;
       opacity: .97;
     }
+    /* Back-Button Styles (konsistent mit kalender.html) */
+    .back-btn {
+      display: inline-block;
+      position: fixed;
+      top: 22px; left: 20px;
+      z-index: 12;
+      background: #fff;
+      color: #002d5b;
+      padding: 10px 21px 10px 13px;
+      font-size: 1.09rem;
+      border: 2px solid #ffd600;
+      border-radius: 16px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background .2s, color .2s, border .2s;
+      box-shadow: 0 2px 12px #0002;
+    }
+    .back-btn:hover {
+      background: #ffd600;
+      color: #002d5b;
+      border-color: #d0021b;
+    }
+    .back-btn:before {
+      content: '←';
+      display: inline-block;
+      margin-right: 0.48em;
+      font-weight: bold;
+      font-size: 1.13em;
+      vertical-align: middle;
+    }
+    @media (max-width: 700px) {
+      .back-btn {
+        font-size: 1rem;
+        top: 13px; left: 7px;
+        padding: 8px 15px 8px 10px;
+        border-width: 2px;
+        border-radius: 11px;
+      }
+    }
   </style>
 </head>
 <body>
   <header>
     <div class="header-inner">
-      <a class="back-btn" href="index.html" id="backBtn">← Back</a>
+      <a class="back-btn" href="index.html" id="backBtn">Back</a>
       <img src="wikinger.png" class="header-logo" alt="Logo" />
       <div class="header-title" id="main-title">EHC BIEL-BIENNE U18-ELIT</div>
       <div class="lang-switcher">
@@ -292,10 +331,10 @@
         download: "Download",
         date: "Upload-Datum",
         noNews: "Noch keine News/Infos vorhanden.",
-        back: "← Back"
+        back: "Back"
       },
       fr: {
-        mainTitle: "EHC BIEL-BIENNE U18-ÉLITE",
+        mainTitle: "EHC BIEL-BIENNE U18-ELIT",
         allNews: "Fichiers, infos, news",
         uploadTitle: "Téléchargement PDF/Image (admins seulement)",
         uploadInstr: "Glissez un fichier PDF ou une image ici ou cliquez pour choisir.",
@@ -312,10 +351,10 @@
         download: "Télécharger",
         date: "Date de téléchargement",
         noNews: "Aucune info disponible.",
-        back: "← Retour"
+        back: "Back"
       },
       en: {
-        mainTitle: "EHC BIEL-BIENNE U18-ELITE",
+        mainTitle: "EHC BIEL-BIENNE U18-ELIT",
         allNews: "Training – Info – News",
         uploadTitle: "PDF/Image Upload (Admins only)",
         uploadInstr: "Drag a PDF or image file here or click to select.",
@@ -332,7 +371,7 @@
         download: "Download",
         date: "Upload date",
         noNews: "No news/info available yet.",
-        back: "← Back"
+        back: "Back"
       }
     };
     let currentLang = localStorage.getItem('news_lang') || 'de';
