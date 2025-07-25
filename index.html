@@ -58,7 +58,7 @@
       color: var(--ehcb-yellow);
       text-shadow: 0 3px 16px #000a;
     }
-    /* Sprachleiste als Card */
+    /* Sprachleiste wie dashboard.html */
     .lang-switcher {
       display: flex;
       gap: 0.45rem;
@@ -76,36 +76,65 @@
     body.dark-mode .lang-switcher {
       background: #1b2940;
     }
+    .lang-btns-row {
+      display: flex;
+      gap: 0.7rem;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto 0.2rem auto;
+      width: 100%;
+      max-width: 390px;
+    }
     .lang-btn {
       background: #fff;
-      color: var(--ehcb-blue);
-      border: none;
-      border-radius: 8px;
-      padding: 9px 40px;
+      color: #002d5b;
+      border: 2.2px solid #ffc700;
+      border-radius: 12px;
+      box-shadow: 0 2px 9px #0001;
+      padding: 0.62rem 1.45rem;
+      font-size: 1.13rem;
       font-weight: bold;
-      font-size: 1.1rem;
-      cursor: pointer;
-      box-shadow: 0 1px 8px #2222;
-      transition: background 0.18s, color 0.18s;
       outline: none;
-      margin-bottom: 3px;
+      transition: background 0.18s, color 0.18s, border 0.18s;
+      margin: 0;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      position: relative;
+      min-width: 62px;
+      text-align: center;
+      display: inline-block;
+      box-sizing: border-box;
     }
-    .lang-btn.active, .lang-btn:focus {
-      background: var(--ehcb-yellow);
-      color: var(--ehcb-blue);
+    .lang-btn.active,
+    .lang-btn:focus,
+    .lang-btn[aria-pressed="true"] {
+      background: #ffc700;
+      color: #011631;
+      border: 2.2px solid #ffc700;
+      font-weight: bold;
     }
-    .lang-btn:hover:not(.active) {
-      background: var(--ehcb-red);
-      color: #fff;
+    .lang-btn:hover {
+      background: #ffc700;
+      color: #011631;
+      border-color: #d0021b;
     }
-    .dark-mode .lang-btn {
-      background: #1b2940;
-      color: var(--ehcb-yellow);
-    }
-    .dark-mode .lang-btn.active,
-    .dark-mode .lang-btn:focus {
-      background: var(--ehcb-yellow);
-      color: var(--ehcb-blue);
+    @media (max-width: 600px) {
+      .lang-btn {
+        padding: 7px 0.5em;
+        font-size: 0.98rem;
+        border-radius: 7.5px;
+        min-width: 27vw;
+        margin-left: 0;
+        margin-right: 0;
+      }
+      .lang-switcher {
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        margin-top: 18px;
+        max-width: 98vw;
+        padding: 0.6rem 0.4rem;
+      }
     }
     /* Dark Mode Toggle */
     .dark-toggle-wrap {
@@ -323,10 +352,10 @@
     <div class="main-title" id="main-title">EHC BIEL-BIENNE U18-ELIT</div>
   </header>
   <div class="lang-switcher">
-    <div class="lang-btns-row" style="display: flex; gap: 0.35rem;">
-      <button class="lang-btn" id="btn-de">DE</button>
-      <button class="lang-btn" id="btn-fr">FR</button>
-      <button class="lang-btn" id="btn-en">EN</button>
+    <div class="lang-btns-row">
+      <button class="lang-btn" id="btn-de" data-lang="de" aria-label="Sprache Deutsch wählen" type="button">DE</button>
+      <button class="lang-btn" id="btn-fr" data-lang="fr" aria-label="Sprache Französisch wählen" type="button">FR</button>
+      <button class="lang-btn" id="btn-en" data-lang="en" aria-label="Sprache Englisch wählen" type="button">EN</button>
     </div>
     <div class="dark-toggle-wrap">
       <span class="toggle-switch" id="darkToggle" tabindex="0" aria-label="Dark Mode Toggle">
