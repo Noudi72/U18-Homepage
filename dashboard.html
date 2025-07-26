@@ -149,6 +149,48 @@
       margin-right: 0 !important;
     }
   }
+
+  /* ---- Dark Mode overrides for best Lesbarkeit ---- */
+  body.dark-mode .form-block,
+  body.dark-mode .login-card {
+    background: #13223d !important;
+    color: #fff !important;
+    border-color: #d0021b !important;
+  }
+  body.dark-mode label,
+  body.dark-mode .form-block label,
+  body.dark-mode .login-card label {
+    color: #ffd600 !important;
+  }
+  body.dark-mode input,
+  body.dark-mode textarea,
+  body.dark-mode select {
+    background: #192b49 !important;
+    color: #fff !important;
+    border-color: #314c7b !important;
+  }
+  body.dark-mode .success {
+    color: #002d5b;
+    background: #fcffea;
+  }
+  body.dark-mode .error {
+    color: #ffd600;
+    background: #361716;
+  }
+  body.dark-mode .lang-btn {
+    background: #23395d !important;
+    color: #ffd600 !important;
+  }
+  body.dark-mode .lang-btn.active,
+  body.dark-mode .lang-btn:focus {
+    background: #ffd600 !important;
+    color: #23395d !important;
+  }
+  body.dark-mode .btn,
+  body.dark-mode button[type="submit"] {
+    background: #ffd600 !important;
+    color: #011631 !important;
+  }
   </style>
   <header>
     <img src="wikinger.png" class="header-logo" alt="Logo" />
