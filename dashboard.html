@@ -610,6 +610,24 @@
       });
     }
 
+    function loadFeedbackEntriesFromSheet() {
+      const scriptUrl = 'https://script.google.com/macros/s/AKfycbwzVEiz_VQlUjAP2RNlxUZG0sI4g4cl1B6eirOic5veGoCLgVVE_hSfD7Y9yg8Q17DM/exec?action=list';
+      fetch(scriptUrl)
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data.feedbacks)) {
+            feedbackEntries = data.feedbacks.map(entry => ({
+              ...entry,
+              date: new Date(entry.date).getTime()
+            }));
+            renderFeedbackList();
+          }
+        })
+        .catch(() => {
+          alert("Feedback-Daten konnten nicht geladen werden!");
+        });
+    }
+
     function checkPassword() {
       const pwInput = document.getElementById('password');
       const msgDiv = document.getElementById('login-msg');
@@ -621,7 +639,7 @@
         document.getElementById('dashboard-section').style.display = 'block';
         msgDiv.textContent = "";
         pwInput.value = "";
-        renderFeedbackList();
+        loadFeedbackEntriesFromSheet();
       } else {
         msgDiv.textContent = translations[currentLang].loginFailed;
         msgDiv.style.color = 'var(--ehcb-red)';
