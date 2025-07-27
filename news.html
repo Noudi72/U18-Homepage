@@ -180,6 +180,7 @@
       font-weight: bold;
       transition: background .2s, color .2s, border .2s;
       box-shadow: 0 2px 12px #0002;
+      text-shadow: none;
     }
     .back-btn:before {
       content: '←';
@@ -228,30 +229,56 @@
       margin: 0 auto;
       padding: 0 14px;
     }
-    .yellow-slogan {
-      background: var(--ehcb-yellow);
+    /* Entfernt: .yellow-slogan (wird nicht mehr verwendet) */
+    /* ---- TICKER-BALKEN wie dashboard ---- */
+    .ticker-bar {
+      background: rgba(210,210,210,0.18);
       color: var(--ehcb-blue);
-      text-align: center;
-      font-size: 1.29rem;
+      font-size: 1.23rem;
       font-weight: bold;
-      border-radius: 0;
-      width: 100vw;
-      max-width: none;
-      padding: 0.85rem 1rem 0.79rem 1rem;
-      letter-spacing: 1.4px;
-      box-shadow: 0 1px 7px #0002;
+      border-radius: 0 0 17px 17px;
+      box-shadow: 0 2px 18px #0002, 0 0px 0px #fff;
+      /* border-top removed */
+      overflow: hidden;
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      max-width: 410px;
+      min-width: 0;
       box-sizing: border-box;
-      overflow-x: hidden;
-      position: fixed;
-      left: 0; bottom: 44px;
-      z-index: 100;
-      border-top: 4px solid #d0021b;
-      transition: background .3s, color .3s;
+      pointer-events: none;
+      margin: 0 auto 1.7rem auto;
     }
-    body.dark-mode .yellow-slogan {
-      background: #111a29 !important;
+    body.dark-mode .ticker-bar {
+      background: rgba(210,210,210,0.18) !important;
       color: #ffc700 !important;
-      border-top: 4px solid #ffc700 !important;
+      /* border-top removed */
+      box-shadow: 0 2px 18px #0002, 0 0px 0px #fff !important;
+    }
+    .ticker-inner {
+      display: inline-block;
+      white-space: nowrap;
+      will-change: transform;
+      padding-left: 0;
+      animation: ticker-move 16s linear infinite;
+    }
+    @keyframes ticker-move {
+      0% { transform: translateX(100%);}
+      100% { transform: translateX(-100%);}
+    }
+    @media (max-width: 600px) {
+      .ticker-bar {
+        font-size: 0.98rem;
+        height: 38px;
+        border-radius: 0 0 13px 13px;
+        width: 92vw;
+        max-width: 96vw;
+        min-width: 0;
+        box-sizing: border-box;
+        margin: 0 auto 1.7rem auto;
+      }
     }
     footer {
       text-align:center;
@@ -430,9 +457,9 @@
       </div>
     </section>
     <button id="logoutBtn" class="logout-btn" style="display:none;">Logout</button>
-  </div>
-  <div class="yellow-slogan" id="slogan">
-    "OUR STRENGTH IS OUR UNITY!"
+    <div class="ticker-bar">
+      <div class="ticker-inner">"OUR STRENGTH IS OUR UNITY!"</div>
+    </div>
   </div>
   <footer>
     © 2025 EHC Biel-Bienne U18-Elit

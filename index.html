@@ -241,31 +241,6 @@
       filter: drop-shadow(0 1px 4px #0001);
       transition: filter .2s;
     }
-    .yellow-slogan {
-      background: var(--ehcb-yellow);
-      color: var(--ehcb-blue);
-      text-align: center;
-      font-size: 1.29rem;
-      font-weight: bold;
-      border-radius: 0;
-      width: 100vw;
-      max-width: none;
-      padding: 0.85rem 1rem 0.79rem 1rem;
-      letter-spacing: 1.4px;
-      box-shadow: 0 1px 7px #0002;
-      box-sizing: border-box;
-      overflow-x: hidden;
-      position: fixed;
-      left: 0; bottom: 44px; /* Footerhöhe */
-      z-index: 100;
-      border-top: 4px solid #d0021b;
-      transition: background .3s, color .3s;
-    }
-    body.dark-mode .yellow-slogan {
-      background: #111a29;
-      color: var(--ehcb-yellow);
-      border-top: 4px solid var(--ehcb-yellow);
-    }
     .pwa-install-hint {
       display: none;
       position: fixed;
@@ -323,25 +298,66 @@
       color: #e3e6ec;
       opacity: .97;
     }
+    /* Yellow Slogan Box & Ticker (Tagebuch style) */
+    .yellow-slogan-box {
+      width: 97vw;
+      max-width: 520px;
+      margin: 24px auto 0 auto;
+      background: rgba(210,210,210,0.18);
+      backdrop-filter: blur(3px);
+      border-radius: 0 0 30px 30px;
+      box-shadow: 0 4px 32px #0001;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      min-height: 45px;
+      overflow: hidden;
+      border: none;
+    }
+    .slogan-ticker {
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+      height: 45px;
+      display: flex;
+      align-items: center;
+    }
+    .slogan-ticker-text {
+      display: inline-block;
+      white-space: nowrap;
+      font-size: 1.22rem;
+      font-weight: bold;
+      letter-spacing: 1.1px;
+      color: #002d5b;
+      /* Seamless continuous marquee */
+      will-change: transform;
+      animation: slogan-marquee 11s linear infinite;
+      padding-left: 100%;
+    }
+    @keyframes slogan-marquee {
+      0%   { transform: translateX(0);}
+      100% { transform: translateX(-100%);}
+    }
+    body.dark-mode .yellow-slogan-box {
+      background: rgba(24, 36, 50, 0.52);
+      backdrop-filter: blur(3px);
+    }
+    body.dark-mode .slogan-ticker-text {
+      color: #ffc700;
+    }
     @media (max-width: 600px) {
-      .form-block { 
-        padding: 17px 1.5vw 17px 1.5vw; 
-        border-radius: 15px; 
-        max-width: 99vw; 
+      .yellow-slogan-box {
+        max-width: 99vw;
         width: 99vw;
+        border-radius: 0 0 17px 17px;
+        min-height: 36px;
       }
-      .header-logo { max-width: 80px; }
-      .main-title { font-size: 1.24rem; }
-      .lang-btn { font-size: 0.98rem; padding: 8px 12vw; }
-      .yellow-slogan { font-size: 1.05rem; padding: 0.7rem 0.2rem; }
-      footer { font-size: 0.87rem; }
-      .lang-switcher {
-        flex-direction: column;
-        align-items: center;
-        gap: 0;
-        margin-top: 18px;
-        max-width: 98vw;
-        padding: 0.6rem 0.4rem;
+      .slogan-ticker {
+        height: 36px;
+      }
+      .slogan-ticker-text {
+        font-size: 1.05rem;
       }
     }
   </style>
@@ -373,12 +389,16 @@
     <a href="dashboard.html" class="main-btn" id="btn-dashboard"><span class="btn-emoji">📝</span><span id="feedbackTxt">Spieler Reflexion</span></a>
     <a href="tagebuch.html" class="main-btn" id="btn-tagebuch"><span class="btn-emoji">📔</span><span id="tagebuchTxt">Mein Tagebuch</span></a>
   </div>
+  <div class="yellow-slogan-box">
+    <div class="slogan-ticker">
+      <span class="slogan-ticker-text" id="slogan-ticker">
+        "OUR STRENGTH IS OUR UNITY!"
+      </span>
+    </div>
+  </div>
   <div class="pwa-install-hint" id="pwaInstallHint">
     <span id="installMsg">Tipp: Füge diese Seite deinem Home-Bildschirm hinzu für Schnellzugriff wie eine App.</span>
     <button class="close-hint" onclick="hidePwaHint()" aria-label="Schliessen">×</button>
-  </div>
-  <div class="yellow-slogan" id="slogan">
-    "OUR STRENGTH IS OUR UNITY!"
   </div>
   <footer>
     © 2025 EHC Biel-Bienne U18-Elit
@@ -446,7 +466,13 @@
       document.getElementById('sponserTxt').textContent = t.sponser;
       document.getElementById('spiritTxt').textContent = t.spirit;
       document.getElementById('feedbackTxt').textContent = t.feedback;
-      document.getElementById('slogan').textContent = t.slogan;
+      // Update both possible slogan ticker and fallback
+      if(document.getElementById('slogan-ticker')) {
+        document.getElementById('slogan-ticker').textContent = t.slogan;
+      }
+      if(document.getElementById('slogan')) {
+        document.getElementById('slogan').textContent = t.slogan;
+      }
       document.getElementById('tagebuchTxt').textContent = t.tagebuch;
       document.getElementById('installMsg').textContent = t.installHint;
       if(document.getElementById('btn-coach-tagebuch')) {

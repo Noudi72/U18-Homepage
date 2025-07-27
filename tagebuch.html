@@ -5,434 +5,143 @@
   <title>Mein Tagebuch – EHCB U18</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   <style>
-:root {
-  --ehcb-blue: #002d5b;
-  --ehcb-blue-dark: #011631;
-  --ehcb-yellow: #ffc700;
-  --ehcb-yellow-light: #ffe36c;
-  --ehcb-white: #fff;
-  --ehcb-red: #d0021b;
-  --radius-xl: 28px;
-  --radius-lg: 15px;
-  --shadow-main: 0 10px 34px #002d5b22, 0 2px 8px #d0021b0c;
-}
 
-body.dark-mode {
-  background: #091b30 !important;
-  color: #fff !important;
-}
-body.dark-mode header .main-title,
-body.dark-mode .main-title {
-  color: #ffc700 !important;
-  text-shadow: 0 3px 16px #000a !important;
-}
-body.dark-mode .form-block {
-  background: #182742 !important;
-  border-color: #ffc700 !important;
-}
-body.dark-mode .diary-card {
-  background: #20375b !important;
-  color: #fff !important;
-  border-left: 8px solid #ffc700 !important;
-  border-top: 1.5px solid #d0021b !important;
-}
-body.dark-mode .yellow-slogan {
-  background: #111a29 !important;
-  color: #ffc700 !important;
-  border-top: 4px solid #ffc700 !important;
-}
-body.dark-mode footer {
-  background: #151e2f !important;
-  color: #e3e6ec !important;
-  opacity: .97 !important;
-}
-body.dark-mode .lang-btn {
-  background: #fff !important;
-  color: #002d5b !important;
-  border: none !important;
-}
-body.dark-mode .lang-btn.active,
-body.dark-mode .lang-btn:focus {
-  background: #ffc700 !important;
-  color: #002d5b !important;
-}
-body.dark-mode .lang-btn:hover:not(.active) {
-  background: #d0021b !important;
-  color: #fff !important;
-}
+  .main-btn {
+    width: 100%;
+    padding: 1.13em 0;
+    background: #ffc600;
+    border: none;
+    border-radius: 18px;
+    color: #002d5b;
+    font-size: 1.25em;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    box-shadow: 0 4px 16px #ffc60044;
+    cursor: pointer;
+    margin-top: 1.05em;
+    transition: background 0.17s;
+  }
+  .main-btn:hover,
+  .main-btn:focus {
+    background: #ffdb59;
+    outline: none;
+  }
 
-html, body {
-  margin: 0; padding: 0;
-  font-family: 'Segoe UI', Arial, sans-serif;
-  min-height: 100vh;
-  background: linear-gradient(130deg, #fff 0%, #f8fafb 42%, #e9ecf2 100%);
-  color: var(--ehcb-blue);
-  box-sizing: border-box;
-  width: 100vw;
-  overflow-x: hidden;
-}
-
-body, .app-shell {
-  min-height: 100vh; height: 100dvh;
-  display: flex; flex-direction: column;
-  justify-content: stretch;
-}
-
-header {
-  text-align: center;
-  padding: 24px 0 4px 0;
-  background: #f7f9fb;
-}
-body.dark-mode header {
-  background: #101b29;
-}
-.header-logo {
-  max-width: 110px;
-  display: block;
-  margin: 26px auto 10px auto;
-  filter: drop-shadow(0 2px 9px #01163155);
-}
-.main-title {
-  font-size: 2.18rem;
-  color: var(--ehcb-blue);
-  font-weight: 900;
-  letter-spacing: 2px;
-  text-shadow: 0 2px 8px #d0021b11;
-  margin: 4px auto 0 auto;
-  display: inline-block;
-}
-
-.back-btn {
-  display: inline-block;
-  position: fixed;
-  top: 22px; left: 20px;
-  z-index: 12;
-  background: var(--ehcb-white);
-  color: var(--ehcb-blue);
-  padding: 10px 21px 10px 13px;
-  font-size: 1.09rem;
-  border: 2px solid var(--ehcb-yellow);
-  border-radius: var(--radius-lg);
-  text-decoration: none;
-  font-weight: bold;
-  transition: background .2s, color .2s, border .2s;
-  box-shadow: 0 2px 12px #0002;
-}
-.back-btn:hover {
-  background: var(--ehcb-yellow);
-  color: var(--ehcb-blue-dark);
-  border-color: var(--ehcb-red);
-}
-
-.app-shell {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  width: 100vw;
-  box-sizing: border-box;
-  overflow-x: hidden;
-}
-
-.form-block {
-  background: var(--ehcb-white);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-main);
-  width: 96vw;
-  max-width: 440px;
-  padding: 34px 5vw 28px 5vw;
-  margin: 24px auto 22px auto;
-  display: flex; flex-direction: column;
-  align-items: stretch;
-  animation: fadeIn .65s;
-  border: 2.2px solid var(--ehcb-red);
-  box-sizing: border-box;
-  overflow-x: hidden;
-}
-
-@keyframes fadeIn {
-  0% { transform: translateY(28px) scale(.97); opacity: 0.4;}
-  100% { transform: none; opacity: 1;}
-}
-
-    .langbar {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 1.1rem;
-    }
-    .lang-btns-row {
-      display: flex;
-      gap: 0.7rem;
-      justify-content: center;
-      align-items: center;
-      margin: 0 auto 0.2rem auto;
-      width: 100%;
-      max-width: 390px;
-    }
-    .lang-btn {
-      background: var(--ehcb-white);
-      color: var(--ehcb-blue);
-      border: 2.2px solid var(--ehcb-yellow);
-      border-radius: 12px;
-      box-shadow: 0 2px 9px #0001;
-      padding: 0.62rem 1.45rem;
-      font-size: 1.13rem;
-      font-weight: bold;
-      outline: none;
-      transition: background 0.18s, color 0.18s, border 0.18s;
-      margin: 0;
-      cursor: pointer;
-      letter-spacing: 0.5px;
-      position: relative;
-      min-width: 62px;
-      text-align: center;
-      display: inline-block;
-      box-sizing: border-box;
-    }
-    .lang-btn.active,
-    .lang-btn:focus,
-    .lang-btn[aria-pressed="true"] {
-      background: var(--ehcb-yellow);
-      color: var(--ehcb-blue-dark);
-      border: 2.2px solid var(--ehcb-yellow);
-      font-weight: bold;
-    }
-    .lang-btn:hover {
-      background: var(--ehcb-yellow);
-      color: var(--ehcb-blue-dark);
-      border-color: var(--ehcb-red);
-    }
-    @media (max-width: 600px) {
-      .lang-btn {
-        padding: 7px 0.5em;
-        font-size: 0.98rem;
-        border-radius: 7.5px;
-        min-width: 27vw;
-        margin-left: 0;
-        margin-right: 0;
-      }
-    }
-    .dark-toggle-wrap {
+  .diary-actions {
+    display: flex;
+    justify-content: center;
+    gap: 0.7em;
+    margin-top: 0.9em;
+    flex-wrap: wrap;
+  }
+  .diary-actions .main-btn {
+    min-width: 128px;
+    padding: 0.65em 1.2em;
+    font-size: 1.09em;
+    font-weight: 700;
+    border-radius: 14px;
+    box-shadow: none;
+    margin: 0.3em 0;
+    text-align: center;
+    transition: background 0.18s, color 0.18s;
+  }
+  .diary-actions .main-btn:first-child {
+    background: #ffc600;
+    color: #002d5b;
+  }
+  .diary-actions .main-btn:last-child {
+    background: #d0021b;
+    color: #fff;
+  }
+  .diary-actions .main-btn:hover,
+  .diary-actions .main-btn:focus {
+    filter: brightness(1.11);
+  }
+  /* --- Slogan-Ticker Styles (updated) --- */
+  .yellow-slogan-box {
+    max-width: 480px;
+    width: 100%;
+    margin: 1.5em auto 0 auto;
+    background: rgba(210,210,210,0.13);
+    border-radius: 0 0 24px 24px;
+    overflow: hidden;
+    height: 2.3em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: none;
+    border: none;
+    pointer-events: none;
+  }
+  .slogan-ticker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  .slogan-ticker-text {
+    display: inline-block;
+    white-space: nowrap;
+    font-size: 1.19em;
+    font-weight: 900;
+    letter-spacing: 0.09em;
+    color: #002d5b;
+    will-change: transform;
+    animation: slogan-ticker 13s linear infinite;
+    padding-left: 0;
+    padding-right: 0;
+    line-height: 1.18;
+  }
+  @keyframes slogan-ticker {
+    0%   { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+  }
+  @media (max-width: 600px) {
+    .yellow-slogan-box {
+      max-width: 97vw;
+      margin: 0.3em auto 0.2em auto;
+      border-radius: 0 0 18px 18px;
+      height: 2.3em;
+      background: rgba(210,210,210,0.13);
+      left: unset !important;
+      transform: unset !important;
       display: flex;
       align-items: center;
-      gap: 0.42rem;
-      margin-top: 0.21em;
-      width: 100%;
       justify-content: center;
     }
-    .toggle-switch {
-      width: 44px; height: 24px;
-      background: #bbb;
-      border-radius: 14px;
-      display: inline-block;
-      position: relative;
-      cursor: pointer;
-      transition: background .18s;
-      vertical-align: middle;
+    .slogan-ticker-text { font-size: 1.09em; }
+    .diary-actions .main-btn {
+      min-width: 95px;
+      font-size: 1em;
+      padding: 0.7em 0.9em;
     }
-    .toggle-switch .slider {
-      width: 22px; height: 22px;
-      border-radius: 50%;
-      background: var(--ehcb-white);
-      position: absolute;
-      top: 1px; left: 1px;
-      box-shadow: 0 1px 4px #0002;
-      transition: left .19s;
-    }
-    .toggle-switch.active { background: #d0021b;}
-    .toggle-switch.active .slider { left: 21px; background: #ffc700;}
-    .dark-toggle-label {
-      font-size: 1.15rem;
-      color: var(--ehcb-blue);
-      margin-left: 0.22em;
-      font-weight: bold;
-      cursor: pointer;
-      user-select: none;
-      transition: color .3s;
-    }
-    body.dark-mode .dark-toggle-label { color: var(--ehcb-yellow);}
-
-input[type="text"], textarea, select {
-  width: 100%;
-  border-radius: 15px;
-  font-size: 1.15rem;
-  margin-bottom: 14px;
-  border: 1.7px solid #bbb;
-  background: #fff;
-  color: #002d5b;
-  padding: 16px 15px;
-  box-shadow: 0 1px 8px #2221;
-  transition: border .19s;
-  box-sizing: border-box;
-}
-
-button, .main-btn {
-  background: var(--ehcb-yellow); color: var(--ehcb-blue); border: none;
-  font-weight: bold; font-size: 1.22rem; padding: 17px 0;
-  cursor: pointer; box-shadow: 0 2px 10px #2221;
-  border-radius: 18px; margin-bottom: 7px; margin-top: 10px;
-  width: 100%;
-  transition: background .18s, color .18s, box-shadow .17s;
-  border: 2px solid var(--ehcb-yellow);
-}
-button:hover, .main-btn:hover {
-  background: var(--ehcb-red);
-  color: #fff;
-  border-color: var(--ehcb-red);
-}
-
-#diaryForm label {
-  display: block;
-  margin-top: 8px;
-  font-size: 1.06rem;
-  color: #002d5b;
-  font-weight: bold;
-}
-
-.yellow-slogan {
-  background: var(--ehcb-yellow);
-  color: var(--ehcb-blue);
-  text-align: center;
-  font-size: 1.29rem;
-  font-weight: bold;
-  border-radius: 0;
-  width: 100vw;
-  max-width: none;
-  padding: 0.85rem 1rem 0.79rem 1rem;
-  letter-spacing: 1.4px;
-  box-shadow: 0 1px 7px #0002;
-  box-sizing: border-box;
-  overflow-x: hidden;
-  position: fixed;
-  left: 0; bottom: 44px;
-  z-index: 100;
-  border-top: 4px solid #d0021b;
-  transition: background .3s, color .3s;
-}
-body.dark-mode .yellow-slogan {
-  background: #111a29 !important;
-  color: #ffc700 !important;
-  border-top: 4px solid #ffc700 !important;
-}
-footer {
-  text-align:center;
-  margin: 0 auto;
-  color: #002d5b;
-  background: #fff;
-  opacity: 0.69;
-  font-size: 1.03rem;
-  width: 100vw;
-  max-width: none;
-  box-sizing: border-box;
-  position: fixed;
-  left: 0; bottom: 0;
-  padding: 11px 0 6px 0;
-  z-index: 101;
-  border-top: 1.5px solid #e9ecf2;
-  transition: background .3s, color .3s;
-}
-body.dark-mode footer {
-  background: #151e2f !important;
-  color: #e3e6ec !important;
-  opacity: .97 !important;
-}
-@media (max-width: 600px) {
-  .yellow-slogan { font-size: 1.05rem; padding: 0.7rem 0.2rem; }
-  footer { font-size: 0.87rem; }
-}
-
-/* Diary Entries styling */
-#diaryList .diary-card {
-  background: #fff;
-  border-radius: 16px;
-  margin-bottom: 18px;
-  padding: 16px 13px 10px 13px;
-  box-shadow: 0 2px 16px #0018;
-  color: #002d5b;
-  animation: fadeIn .5s;
-  box-sizing: border-box;
-  border-left: 8px solid #d0021b;
-  border-top: 1.5px solid #ffc700;
-}
-.diary-date {
-  font-size: 1.06rem;
-  color: #d0021b;
-  font-weight: 700;
-  margin-bottom: 5px;
-  letter-spacing: 1.1px;
-}
-.date-str {
-  color: #002d5b;
-  font-weight: 600;
-  margin-right: 7px;
-}
-.diary-text {
-  font-size: 1.12rem;
-  margin-bottom: 7px;
-  color: #002d5b;
-  white-space: pre-line;
-}
-.diary-actions {
-  display: flex; gap: 9px;
-  margin-top: 6px;
-}
-.diary-actions button {
-  background: var(--ehcb-yellow);
-  color: var(--ehcb-blue);
-  font-size: 1.09rem;
-  padding: 10px 0;
-  border-radius: 11px;
-  flex: 1 1 0px;
-  box-shadow: 0 1px 7px #002d5b19;
-  font-weight: bold;
-  border: 2px solid #ffc700;
-  transition: background .17s, color .17s, border .17s;
-}
-.diary-actions button:hover {
-  background: var(--ehcb-red);
-  color: #fff;
-  border-color: #d0021b;
-}
-
-@media (max-width: 540px) {
-  html, body, .app-shell { width: 100vw; }
-  .header-logo { max-width: 84px; margin-top: 9px;}
-  .main-title { font-size: 1.19rem; }
-  .form-block { 
-    padding: 14px 2vw 14px 2vw; 
-    border-radius: 14px; 
-    max-width: 99vw; 
-    width: 99vw;
   }
-  .yellow-slogan { 
-    font-size: 1.19rem; 
-    border-radius: 7px; 
-    padding: 0.6rem 0.3rem; 
-    max-width: 99vw; 
-    width: 99vw;
+  body.dark-mode .yellow-slogan-box {
+    background: rgba(80,80,80,0.28);
+    box-shadow: none;
   }
-  .back-btn { 
-    top: 7px; left: 7px; 
-    font-size: 0.96rem; 
-    padding: 7px 12px 7px 8px;
+  body.dark-mode .slogan-ticker-text {
+    color: #ffc600;
   }
-  footer { 
-    font-size: 0.89rem; 
-    margin-top: 5px; 
-    max-width: 99vw; 
-    width: 99vw;
+  /* Remove any text-shadow or shadows from back-btn */
+  .back-btn {
+    text-shadow: none !important;
+    box-shadow: none !important;
   }
-}
+  body.dark-mode footer {
+    color: #fff !important;
+  }
   </style>
 </head>
+<link rel="stylesheet" href="style.css">
+</head>
 <body>
-  <a class="back-btn" href="index.html">← Zurück</a>
+  <button class="back-btn" onclick="window.location.href='index.html'" aria-label="Zurück zur Startseite" type="button" style="text-shadow:none;box-shadow:none;">Back</button>
   <header>
     <img src="wikinger.png" class="header-logo" alt="Logo" />
-    <div class="main-title" id="diaryTitle">Mein Tagebuch</div>
+    <div class="main-title" id="diaryTitle" style="color:#d0021b;">Mein Tagebuch</div>
   </header>
   <div class="app-shell">
     <div class="form-block">
@@ -451,7 +160,7 @@ body.dark-mode footer {
       </div>
       <section id="loginSection">
         <input type="text" id="playerCode" placeholder="Dein Spieler-Code (z.B. U18-23-012)" style="margin-top: 10px;">
-        <button id="btn-login" onclick="loginDiary()">Einloggen</button>
+        <button id="btn-login" class="main-btn" onclick="loginDiary()">Einloggen</button>
       </section>
       <section id="diarySection" style="display:none;">
         <form id="diaryForm">
@@ -464,18 +173,20 @@ body.dark-mode footer {
             <option value="😡">😡 Wütend</option>
             <option value="🤩">🤩 Super</option>
           </select>
-          <button type="submit" id="btn-save" style="margin-top:13px;">Speichern</button>
+          <button type="submit" id="btn-save" class="main-btn" style="margin-top:13px;">Speichern</button>
+          <div id="saveFeedback" style="display:none;text-align:center;margin-top:0.7em;font-weight:600;color:#19b642;font-size:1.09em;"></div>
         </form>
         <ul id="diaryList" style="list-style:none;padding:0;margin-top:9px;"></ul>
       </section>
     </div>
   </div>
-  <div class="yellow-slogan" id="slogan">
-    "OUR STRENGTH IS OUR UNITY!"
+  <div class="yellow-slogan-box">
+    <div class="slogan-ticker">
+      <span class="slogan-ticker-text" id="slogan-ticker">
+        "OUR STRENGTH IS OUR UNITY!"
+      </span>
+    </div>
   </div>
-  <footer>
-    © 2025 EHC Biel-Bienne U18-Elit
-  </footer>
   <script>
     const scriptUrl = 'https://script.google.com/macros/s/AKfycbwjXQ5_X_gHMlgmVzGaV_eBVpWFIKWMqVKCb5S0WeiJDxCUPNWlVw6bwvmwE9QJGjy92g/exec';
     let playerCode = '';
@@ -506,8 +217,8 @@ body.dark-mode footer {
           </div>
           <div class="diary-text">${e.text}</div>
           <div class="diary-actions">
-            <button onclick="editDiary('${e.timestamp}','${e.text.replace(/'/g,"&#39;")}','${e.mood}')">Bearbeiten</button>
-            <button onclick="deleteDiary('${e.timestamp}')">Löschen</button>
+            <button class="main-btn" onclick="editDiary('${e.timestamp}','${e.text.replace(/'/g,"&#39;")}','${e.mood}')">Bearbeiten</button>
+            <button class="main-btn" onclick="deleteDiary('${e.timestamp}')">Löschen</button>
           </div>
         `;
         ul.appendChild(li);
@@ -519,6 +230,14 @@ body.dark-mode footer {
       e.preventDefault();
       const text = document.getElementById('diaryText').value;
       const mood = document.getElementById('diaryMood').value;
+      const feedbackDiv = document.getElementById('saveFeedback');
+      const showFeedback = () => {
+        if (feedbackDiv) {
+          feedbackDiv.textContent = "✅ Gespeichert!";
+          feedbackDiv.style.display = "block";
+          setTimeout(() => { feedbackDiv.style.display = "none"; }, 2000);
+        }
+      };
       if(editId !== null) {
         // Beim Bearbeiten: Edit-Aufruf mit id (timestamp), code, text, mood
         fetch(scriptUrl+'?action=edit&id='+encodeURIComponent(editId)+'&code='+encodeURIComponent(playerCode)+
@@ -527,13 +246,14 @@ body.dark-mode footer {
         ).then(()=>{ 
           editId = null; 
           this.reset(); 
-          loadDiary(); 
+          loadDiary();
+          showFeedback();
         });
       } else {
         fetch(scriptUrl+'?action=add&code='+encodeURIComponent(playerCode)+
               '&text='+encodeURIComponent(text)+'&mood='+encodeURIComponent(mood),
               {method:'POST'}
-        ).then(()=>{ this.reset(); loadDiary(); });
+        ).then(()=>{ this.reset(); loadDiary(); showFeedback(); });
       }
     };
 
@@ -588,7 +308,6 @@ body.dark-mode footer {
       document.getElementById('btn-login').textContent = t.loginBtn;
       document.getElementById('playerCode').placeholder = t.codePlaceholder;
       document.getElementById('btn-save').textContent = t.saveBtn;
-      document.getElementById('slogan').textContent = t.slogan;
       document.getElementById('labelMoodTitle').textContent = t.moodTitle;
     }
     window.addEventListener('DOMContentLoaded', function() {
@@ -623,6 +342,27 @@ body.dark-mode footer {
     darkToggle.addEventListener('keypress', e => { if(e.key === ' ' || e.key === 'Enter') setDarkMode(!body.classList.contains('dark-mode')); });
     darkToggleLabel.addEventListener('click', () => setDarkMode(!body.classList.contains('dark-mode')));
     if(localStorage.getItem('ehcb_darkmode') === '1') setDarkMode(true);
+  </script>
+  <footer>© 2025 EHC Biel-Bienne U18-Elit</footer>
+  <script>
+    function setTickerTextByLang(lang) {
+      const texts = {
+        de: '"OUR STRENGTH IS OUR UNITY!"',
+        fr: '"NOTRE FORCE, C’EST NOTRE UNITÉ!"',
+        en: '"OUR STRENGTH IS OUR UNITY!"'
+      };
+      var el = document.getElementById('slogan-ticker');
+      if (el) el.textContent = texts[lang] || texts.de;
+    }
+    window.addEventListener('DOMContentLoaded', function() {
+      setTickerTextByLang(localStorage.getItem('diary_lang') || 'de');
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const lang = btn.getAttribute('data-lang');
+          setTimeout(() => setTickerTextByLang(lang), 100);
+        });
+      });
+    });
   </script>
 </body>
 </html>

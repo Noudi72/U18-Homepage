@@ -236,6 +236,7 @@
       border: 2.8px solid var(--ehc-yellow);
       margin: 0 auto;
       position: relative;
+      max-width: 430px;
     }
     .card h2 {
       color: var(--ehc-yellow);
@@ -255,85 +256,72 @@
     body.dark-mode .calendar-hint {
       color: #ffd600;
     }
-    .yellow-slogan {
-      background: #ffd600;
-      color: #002b5c;
-      text-align: center;
-      font-size: 1.29rem;
+
+    /* Ticker-Balken exakt wie in dashboard und index */
+    .ticker-bar {
+      width: 100%;
+      max-width: 430px;
+      margin: 0 auto 24px auto;
+      background: rgba(210,210,210,0.18);
+      border-radius: 13px;
+      color: #002d5b;
+      font-size: 1.12rem;
       font-weight: bold;
-      border-radius: 0;
-      width: 100vw;
-      max-width: none;
-      padding: 0.85rem 1rem 0.79rem 1rem;
-      letter-spacing: 1.4px;
-      box-shadow: 0 1px 7px #0002;
       box-sizing: border-box;
-      overflow-x: hidden;
-      position: fixed;
-      left: 0; bottom: 44px;
-      z-index: 100;
-      border-top: 4px solid #d0021b;
-      transition: background .3s, color .3s;
-    }
-    body.dark-mode .yellow-slogan {
-      background: #111a29;
-      color: #ffd600;
-      border-top: 4px solid #ffd600;
-    }
-    footer {
-      text-align:center;
-      margin: 0 auto;
-      color: #002b5c;
-      background: #fff;
-      opacity: 0.69;
-      font-size: 1.03rem;
-      width: 100vw;
-      max-width: none;
-      box-sizing: border-box;
-      position: fixed;
-      left: 0; bottom: 0;
-      padding: 11px 0 6px 0;
-      z-index: 101;
-      border-top: 1.5px solid #e9ecf2;
-      transition: background .3s, color .3s;
-    }
-    body.dark-mode footer {
-      background: #151e2f;
-      color: #e3e6ec;
-      opacity: .97;
-    }
-    @media (max-width: 600px) {
-      .yellow-slogan { font-size: 1.05rem; padding: 0.7rem 0.2rem; }
-      footer { font-size: 0.87rem; }
-    }
-    /* Loader-Styles */
-    .loader-backdrop {
-      position: fixed;
-      z-index: 1000;
-      inset: 0;
-      background: rgba(7, 49, 102, 0.96);
+      box-shadow: 0 1px 7px #ffd60033;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: opacity 0.3s;
+      height: 2.7em;
+      overflow: hidden;
+      position: relative;
+      z-index: 80;
+      letter-spacing: 0.5px;
+      padding: 0 1em;
     }
-    .svg-loader {
-      width: 72px;
-      height: 72px;
-      display: block;
-    }
-    .svg-loader circle {
-      fill: none;
-      stroke: #ffd600;
-      stroke-width: 7;
-      stroke-linecap: round;
-      stroke-dasharray: 180 60;
-      animation: spin-loader 1s linear infinite;
-    }
-    @keyframes spin-loader {
-      100% { transform: rotate(360deg); }
+    body.dark-mode .ticker-bar {
+      color: #ffd600 !important;
+      box-shadow: 0 1px 7px #002d5b55;
     }
 
+    @media (max-width: 700px) {
+      .ticker-bar {
+        font-size: 1.01rem;
+        max-width: 430px;
+        margin: 0 auto 13px auto;
+        height: 2.22em;
+        border-radius: 13px;
+        padding: 0 0.6em;
+      }
+    }
+    .ticker-inner {
+      white-space: nowrap;
+      display: inline-block;
+      padding-left: 100%;
+      animation: ticker-move 12s linear infinite;
+      max-width: 430px;
+    }
+    @keyframes ticker-move {
+      0% { transform: translateX(0);}
+      100% { transform: translateX(-100%);}
+    }
+
+    footer {
+      text-align: center;
+      margin: 24px auto 0 auto;
+      font-size: 1.12rem;
+      color: #002d5b;
+      opacity: 0.87;
+      background: none;
+      box-shadow: none;
+      border: none;
+      padding-bottom: 24px;
+      font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+    }
+
+    body.dark-mode footer {
+      color: #ffd600;
+    }
   </style>
 </head>
 <body>
@@ -372,8 +360,10 @@
       </p>
     </section>
   </div>
-  <div class="yellow-slogan" id="slogan">
-    "OUR STRENGTH IS OUR UNITY!"
+  <div class="ticker-bar">
+    <div class="ticker-inner" id="kalender-ticker">
+      "OUR STRENGTH IS OUR UNITY!"
+    </div>
   </div>
   <footer>
     © 2025 EHC Biel-Bienne U18-Elit
@@ -404,6 +394,12 @@
     };
 
     let currentLang = localStorage.getItem('kalender_lang') || 'de';
+    function setTickerText(text) {
+      const ticker = document.getElementById('kalender-ticker');
+      if (ticker) {
+        ticker.textContent = text;
+      }
+    }
     function changeLanguage(lang) {
       currentLang = lang;
       localStorage.setItem('kalender_lang', lang);
@@ -415,7 +411,7 @@
       document.getElementById('main-title').textContent = t.mainTitle;
       document.getElementById('kalender-title').textContent = t.kalenderTitle;
       document.getElementById('kalender-hint').textContent = t.kalenderHint;
-      document.getElementById('slogan').textContent = t.slogan;
+      setTickerText(t.slogan);
     }
     window.addEventListener('DOMContentLoaded', () => { changeLanguage(currentLang); });
 
