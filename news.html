@@ -308,6 +308,65 @@
         margin-right: 0 !important;
       }
     }
+  /* Dark Mode: Überschriften und Labels rot */
+  body.dark-mode .ehcb-card h2,
+  body.dark-mode .ehcb-card h3,
+  body.dark-mode .ehcb-card #loginHeadline,
+  body.dark-mode .ehcb-card label {
+    color: #d0021b !important;
+  }
+
+  body.dark-mode .news-card .title,
+  body.dark-mode .news-card .date {
+    color: #61a7e3 !important;
+  }
+
+  /* Abstand nach unten, damit Slogan nichts überlappt */
+  @media (min-width: 0px) {
+    .main-content {
+      padding-bottom: 80px !important;
+    }
+    .ehcb-card:last-child {
+      margin-bottom: 100px !important;
+    }
+  }
+    /* --- EHCB-Input-Stil: weiße Felder mit blauem Rahmen, wie gewünscht --- */
+    .ehcb-card input[type="text"],
+    .ehcb-card input[type="password"],
+    .ehcb-card textarea,
+    .ehcb-card select {
+      background: #fff !important;
+      color: #002d5b !important;
+      border: 2px solid #002d5b !important;
+      border-radius: 8px !important;
+      box-shadow: none !important;
+      font-size: 1.08rem !important;
+      font-weight: 500;
+      outline: none;
+      transition: border 0.2s;
+    }
+    .ehcb-card input[type="text"]:focus,
+    .ehcb-card input[type="password"]:focus,
+    .ehcb-card textarea:focus,
+    .ehcb-card select:focus {
+      border: 2.5px solid #d0021b !important;
+    }
+
+    /* Dunkelmodus: weiterhin weiß, Text gelb, Rahmen gelb */
+    body.dark-mode .ehcb-card input[type="text"],
+    body.dark-mode .ehcb-card input[type="password"],
+    body.dark-mode .ehcb-card textarea,
+    body.dark-mode .ehcb-card select {
+      background: #fff !important;
+      color: #d0021b !important;
+      border: 2px solid #ffc700 !important;
+    }
+    body.dark-mode .ehcb-card input[type="text"]:focus,
+    body.dark-mode .ehcb-card input[type="password"]:focus,
+    body.dark-mode .ehcb-card textarea:focus,
+    body.dark-mode .ehcb-card select:focus {
+      border: 2.5px solid #d0021b !important;
+    }
   </style>
 </head>
 <body>
@@ -344,7 +403,7 @@
       </div>
       <div class="news-list" id="newsList"></div>
     </section>
-    <div class="ehcb-card" style="margin-top: 0.5rem;">
+    <div class="ehcb-card" id="adminLoginCard" style="margin-top: 0.5rem;">
       <form id="adminLoginForm" autocomplete="off" style="margin:0;">
         <div id="loginHeadline" style="font-size:1.1rem;font-weight:700;margin-bottom:0.7rem;">Coach-Login (Upload)</div>
         <label for="adminPassword" id="passwordLabel">Passwort</label><br>
@@ -484,7 +543,7 @@
     function showAdminUI(show) {
       document.getElementById('uploadArea').style.display = show ? '' : 'none';
       document.getElementById('logoutBtn').style.display = show ? '' : 'none';
-      document.getElementById('adminLoginForm').style.display = show ? 'none' : '';
+      document.getElementById('adminLoginCard').style.display = show ? 'none' : '';
       renderNewsList(window._newsList || []);
     }
     function handleLogin(e) {
