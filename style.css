@@ -372,3 +372,8 @@ body.dark-mode .feedback-card .f-grid {
   margin-top: 0.6rem;
   padding-top: 0.4rem;
 }
+body.dark-mode .success,
+body.dark-mode .error {
+  background: none !important;
+  box-shadow: none !important;
+}
