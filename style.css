@@ -173,23 +173,19 @@ textarea { resize: vertical; min-height: 70px; }
 
 .success {
   color: var(--ehcb-blue-dark);
-  background: #eaffdf;
   border-radius: 6px;
   font-size: 1.13rem;
   margin-top: 0.6rem;
   padding: 7px 10px;
   text-align: center;
-  box-shadow: 0 1px 8px #0001;
 }
 .error {
   color: var(--ehcb-red);
-  background: #fff3f1;
   border-radius: 7px;
   font-size: 1.08rem;
   margin-top: 0.7rem;
   padding: 6px 11px;
   text-align: center;
-  box-shadow: 0 1px 7px #0001;
 }
 .feedback-list {
   margin: 2.4rem auto;
