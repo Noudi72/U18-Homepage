@@ -477,7 +477,7 @@ body.dark-mode footer {
     © 2025 EHC Biel-Bienne U18-Elit
   </footer>
   <script>
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbycOpF5dlZD6aF9RD8XGLqozYn6Zfhee5Ih5dI1osQcVRDogVdX4JOW6DBFMAu_cPuHQQ/exec';
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbwjXQ5_X_gHMlgmVzGaV_eBVpWFIKWMqVKCb5S0WeiJDxCUPNWlVw6bwvmwE9QJGjy92g/exec';
     let playerCode = '';
     let editId = null;
 
@@ -520,10 +520,15 @@ body.dark-mode footer {
       const text = document.getElementById('diaryText').value;
       const mood = document.getElementById('diaryMood').value;
       if(editId !== null) {
-        fetch(scriptUrl+'?action=edit&id='+editId+'&code='+encodeURIComponent(playerCode)+
+        // Beim Bearbeiten: Edit-Aufruf mit id (timestamp), code, text, mood
+        fetch(scriptUrl+'?action=edit&id='+encodeURIComponent(editId)+'&code='+encodeURIComponent(playerCode)+
               '&text='+encodeURIComponent(text)+'&mood='+encodeURIComponent(mood),
               {method:'POST'}
-        ).then(()=>{ editId=null; this.reset(); loadDiary(); });
+        ).then(()=>{ 
+          editId = null; 
+          this.reset(); 
+          loadDiary(); 
+        });
       } else {
         fetch(scriptUrl+'?action=add&code='+encodeURIComponent(playerCode)+
               '&text='+encodeURIComponent(text)+'&mood='+encodeURIComponent(mood),
