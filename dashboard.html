@@ -824,7 +824,17 @@
 
         const dateSpan = document.createElement('span');
         dateSpan.className = 'f-date';
-        dateSpan.textContent = new Date(entry.date).toLocaleDateString(currentLang);
+        // Format: 29.07.2025, 21:41:33 (DE/FR), 07/29/2025, 21:41:33 (EN)
+        const dateObj = new Date(entry.date);
+        let formattedDate;
+        if (currentLang === 'en') {
+          formattedDate = dateObj.toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+        } else if (currentLang === 'fr') {
+          formattedDate = dateObj.toLocaleString('fr-CH', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+        } else {
+          formattedDate = dateObj.toLocaleString('de-CH', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+        }
+        dateSpan.textContent = formattedDate;
 
         header.appendChild(nameSpan);
         header.appendChild(dateSpan);
@@ -876,7 +886,18 @@
         });
     }
 
+    // Hole Login-Button oben im Script (falls noch nicht vorhanden)
+    const loginBtn = document.getElementById('loginBtn');
+
     function checkPassword() {
+      // Loader & Button UI zu Beginn
+      showLoader(true);
+      loginBtn.disabled = true;
+      const originalBtnText = loginBtn.textContent;
+      loginBtn.textContent = translations[currentLang] && translations[currentLang].loginBtn
+        ? (currentLang === 'de' ? "Login..." : currentLang === 'fr' ? "Connexion..." : "Login...")
+        : "Login...";
+
       const pwInput = document.getElementById('password');
       const msgDiv = document.getElementById('login-msg');
       const pw = pwInput.value.trim();
@@ -888,10 +909,24 @@
         msgDiv.textContent = "";
         pwInput.value = "";
         loadFeedbackEntriesFromSheet();
+        // Loader & Button UI zurücksetzen
+        showLoader(false);
+        loginBtn.disabled = false;
+        loginBtn.textContent = originalBtnText;
+        return;
       } else {
         msgDiv.textContent = translations[currentLang].loginFailed;
         msgDiv.style.color = 'var(--ehcb-red)';
+        // Loader & Button UI zurücksetzen
+        showLoader(false);
+        loginBtn.disabled = false;
+        loginBtn.textContent = originalBtnText;
+        return;
       }
+      // Falls noch ein anderer Rückgabepfad: Loader & Button zurücksetzen (safety)
+      showLoader(false);
+      loginBtn.disabled = false;
+      loginBtn.textContent = originalBtnText;
     }
 
     window.addEventListener('DOMContentLoaded', function() {
@@ -908,54 +943,69 @@
 
       // Handle form submission
       const form = document.getElementById('feedbackForm');
+      const submitBtn = document.getElementById('submitBtn');
+      let feedbackSending = false;
       form.addEventListener('submit', function(e) {
-  e.preventDefault();
+        e.preventDefault();
+        if (feedbackSending) return; // Prevent multiple submissions
+        const name = form.name.value.trim();
+        const feeling = form.feeling.value;
+        const energy = form.energy.value;
+        const intensity = form.intensity.value;
+        const performance = form.performance.value;
+        const comment = form.comment.value.trim();
 
-  const name = form.name.value.trim();
-  const feeling = form.feeling.value;
-  const energy = form.energy.value;
-  const intensity = form.intensity.value;
-  const performance = form.performance.value;
-  const comment = form.comment.value.trim();
+        if(!name || !feeling || !energy) {
+          alert(currentLang === 'de' ? "Bitte alle Pflichtfelder ausfüllen." : currentLang === 'fr' ? "Veuillez remplir tous les champs obligatoires." : "Please fill all required fields.");
+          return;
+        }
 
-  if(!name || !feeling || !energy) {
-    alert(currentLang === 'de' ? "Bitte alle Pflichtfelder ausfüllen." : currentLang === 'fr' ? "Veuillez remplir tous les champs obligatoires." : "Please fill all required fields.");
-    return;
-  }
+        // Loader & Button UI
+        showLoader(true);
+        submitBtn.disabled = true;
+        const originalBtnText = submitBtn.textContent;
+        submitBtn.textContent = currentLang === 'de' ? "Sende..." : currentLang === 'fr' ? "Envoi..." : "Sending...";
+        feedbackSending = true;
 
-  // Sende das Feedback an dein Google Apps Script!
-  const params =
-    '?action=add'
-    + '&name=' + encodeURIComponent(name)
-    + '&feeling=' + encodeURIComponent(feeling)
-    + '&energy=' + encodeURIComponent(energy)
-    + '&intensity=' + encodeURIComponent(intensity)
-    + '&performance=' + encodeURIComponent(performance)
-    + '&comment=' + encodeURIComponent(comment)
-    + '&timestamp=' + Date.now();
+        // Sende das Feedback an dein Google Apps Script!
+        const params =
+          '?action=add'
+          + '&name=' + encodeURIComponent(name)
+          + '&feeling=' + encodeURIComponent(feeling)
+          + '&energy=' + encodeURIComponent(energy)
+          + '&intensity=' + encodeURIComponent(intensity)
+          + '&performance=' + encodeURIComponent(performance)
+          + '&comment=' + encodeURIComponent(comment)
+          + '&timestamp=' + Date.now();
 
-  const scriptUrl = 'https://script.google.com/macros/s/AKfycbwzVEiz_VQlUjAP2RNlxUZG0sI4g4cl1B6eirOic5veGoCLgVVE_hSfD7Y9yg8Q17DM/exec';
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycbwzVEiz_VQlUjAP2RNlxUZG0sI4g4cl1B6eirOic5veGoCLgVVE_hSfD7Y9yg8Q17DM/exec';
 
-  fetch(scriptUrl + params, { method: 'POST' })
-    .then(r => r.json ? r.json() : r.text())
-    .then(() => {
-      // Feedback lokal speichern und anzeigen
-      const entry = {
-        name, feeling, energy, intensity, performance, comment,
-        date: Date.now()
-      };
-      feedbackEntries.push(entry);
-      form.reset();
-      document.getElementById('feedback-success').textContent = translations[currentLang].feedbackSuccess;
-      setTimeout(() => {
-        document.getElementById('feedback-success').textContent = "";
-      }, 4000);
-      renderFeedbackList();
-    })
-    .catch(() => {
-      alert("Übertragung fehlgeschlagen!");
-    });
-});
+        fetch(scriptUrl + params, { method: 'POST' })
+          .then(r => r.json ? r.json() : r.text())
+          .then(() => {
+            // Feedback lokal speichern und anzeigen
+            const entry = {
+              name, feeling, energy, intensity, performance, comment,
+              date: Date.now()
+            };
+            feedbackEntries.push(entry);
+            form.reset();
+            document.getElementById('feedback-success').textContent = translations[currentLang].feedbackSuccess;
+            setTimeout(() => {
+              document.getElementById('feedback-success').textContent = "";
+            }, 4000);
+            renderFeedbackList();
+          })
+          .catch(() => {
+            alert("Übertragung fehlgeschlagen!");
+          })
+          .finally(() => {
+            showLoader(false);
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalBtnText;
+            feedbackSending = false;
+          });
+      });
 
       // Search and sort listeners
       document.getElementById('feedbackSearch').addEventListener('input', renderFeedbackList);
