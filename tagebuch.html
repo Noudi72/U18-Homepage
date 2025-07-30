@@ -133,6 +133,21 @@
   body.dark-mode footer {
     color: #fff !important;
   }
+  .btn-loader {
+    display: inline-block;
+    width: 1.33em;
+    height: 1.33em;
+    border: 3px solid #fff;
+    border-top: 3px solid #d0021b;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-left: 0.8em;
+    vertical-align: middle;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg);}
+    100% { transform: rotate(360deg);}
+  }
   </style>
 </head>
 <link rel="stylesheet" href="style.css">
@@ -173,7 +188,7 @@
             <option value="😡">😡 Wütend</option>
             <option value="🤩">🤩 Super</option>
           </select>
-          <button type="submit" id="btn-save" class="main-btn" style="margin-top:13px;">Speichern</button>
+          <button type="submit" id="btn-save" class="main-btn" style="margin-top:13px;">Speichern<span id="saveLoader" style="display:none;" class="btn-loader"></span></button>
           <div id="saveFeedback" style="display:none;text-align:center;margin-top:0.7em;font-weight:600;color:#19b642;font-size:1.09em;"></div>
         </form>
         <ul id="diaryList" style="list-style:none;padding:0;margin-top:9px;"></ul>
@@ -218,7 +233,7 @@
           <div class="diary-text">${e.text}</div>
           <div class="diary-actions">
             <button class="main-btn" onclick="editDiary('${e.timestamp}','${e.text.replace(/'/g,"&#39;")}','${e.mood}')">Bearbeiten</button>
-            <button class="main-btn" onclick="deleteDiary('${e.timestamp}')">Löschen</button>
+            <button class="main-btn" onclick="deleteDiary('${e.timestamp}')">Löschen<span class="btn-loader" id="delLoader-${e.timestamp}" style="display:none;"></span></button>
           </div>
         `;
         ul.appendChild(li);
@@ -228,6 +243,7 @@
 
     document.getElementById('diaryForm').onsubmit = function(e) {
       e.preventDefault();
+      document.getElementById('saveLoader').style.display = 'inline-block';
       const text = document.getElementById('diaryText').value;
       const mood = document.getElementById('diaryMood').value;
       const feedbackDiv = document.getElementById('saveFeedback');
@@ -248,12 +264,18 @@
           this.reset(); 
           loadDiary();
           showFeedback();
+          document.getElementById('saveLoader').style.display = 'none';
         });
       } else {
         fetch(scriptUrl+'?action=add&code='+encodeURIComponent(playerCode)+
               '&text='+encodeURIComponent(text)+'&mood='+encodeURIComponent(mood),
               {method:'POST'}
-        ).then(()=>{ this.reset(); loadDiary(); showFeedback(); });
+        ).then(()=>{ 
+          this.reset(); 
+          loadDiary(); 
+          showFeedback(); 
+          document.getElementById('saveLoader').style.display = 'none';
+        });
       }
     };
 
@@ -265,8 +287,13 @@
 
     function deleteDiary(id) {
       if(confirm("Eintrag wirklich löschen?")) {
+        const loader = document.querySelector('#delLoader-' + id);
+        if(loader) loader.style.display = 'inline-block';
         fetch(scriptUrl+'?action=delete&id='+id+'&code='+encodeURIComponent(playerCode), {method:'POST'})
-          .then(()=>{ loadDiary(); });
+          .then(()=>{ 
+            loadDiary(); 
+            if(loader) loader.style.display = 'none';
+          });
       }
     }
 
@@ -307,7 +334,8 @@
       document.getElementById('diaryTitle').textContent = t.diaryTitle;
       document.getElementById('btn-login').textContent = t.loginBtn;
       document.getElementById('playerCode').placeholder = t.codePlaceholder;
-      document.getElementById('btn-save').textContent = t.saveBtn;
+      const saveBtn = document.getElementById('btn-save');
+      if (saveBtn && saveBtn.childNodes[0]) saveBtn.childNodes[0].nodeValue = t.saveBtn;
       document.getElementById('labelMoodTitle').textContent = t.moodTitle;
     }
     window.addEventListener('DOMContentLoaded', function() {
