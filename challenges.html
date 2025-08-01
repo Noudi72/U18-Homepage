@@ -122,7 +122,6 @@ const translations = {
     labelCoachPasswort: "Passwort",
     loginBtn: "Login",
     deleteBtn: "Löschen",
-    answerBtn: "Antworten ansehen",
     saveChallengeBtn: "Impuls speichern",
     challengeSaved: "Impuls gespeichert!",
     questionLabel: "Frage*",
@@ -131,7 +130,8 @@ const translations = {
     footer: "© 2025 EHC Biel-Bienne U18-Elit",
     impulsText: "Gerne möchten Sven und ich von euch einen persönlichen Impuls von euch über das Trainingslager. Schreibt uns in ein paar Sätzen, was euch gefallen, oder weniger gefallen hat. Die Antworten sehen nur Sven und ich, ihr braucht also keine Scheu zu haben ;).",
     answerLabel: "Deine Antwort",
-    answerBtn: "Antwort absenden",
+    answerSubmitBtn: "Antwort absenden",
+    showAnswersBtn: "Antworten ansehen",
     missingName: "Bitte Vorname und Nachname eingeben!",
     missingAnswer: "Bitte gib eine Antwort ein!",
     answerSaved: "Danke! Deine Antwort wurde gespeichert.",
@@ -146,7 +146,6 @@ const translations = {
     labelCoachPasswort: "Mot de passe",
     loginBtn: "Connexion",
     deleteBtn: "Supprimer",
-    answerBtn: "Voir réponses",
     saveChallengeBtn: "Enregistrer le défi",
     challengeSaved: "Défi enregistré !",
     questionLabel: "Question*",
@@ -155,7 +154,8 @@ const translations = {
     footer: "© 2025 EHC Biel-Bienne U18-Elit",
     impulsText: "Sven et moi aimerions recevoir de votre part un retour personnel sur le camp d’entraînement. Écrivez-nous en quelques phrases ce que vous avez aimé ou moins aimé. Seuls Sven et moi verrons vos réponses, alors n'ayez aucune crainte ;).",
     answerLabel: "Ta réponse",
-    answerBtn: "Envoyer la réponse",
+    answerSubmitBtn: "Envoyer la réponse",
+    showAnswersBtn: "Voir réponses",
     missingName: "Merci de saisir le prénom et le nom !",
     missingAnswer: "Merci d’écrire une réponse !",
     answerSaved: "Merci ! Ta réponse a été enregistrée.",
@@ -170,7 +170,6 @@ const translations = {
     labelCoachPasswort: "Password",
     loginBtn: "Login",
     deleteBtn: "Delete",
-    answerBtn: "Show answers",
     saveChallengeBtn: "Save impulse",
     challengeSaved: "Impulse saved!",
     questionLabel: "Question*",
@@ -179,7 +178,8 @@ const translations = {
     footer: "© 2025 EHC Biel-Bienne U18-Elit",
     impulsText: "Sven and I would like to receive your personal feedback on the training camp. Please write us a few sentences about what you liked or didn’t like. Only Sven and I will see your answers, so don’t be shy ;).",
     answerLabel: "Your answer",
-    answerBtn: "Submit answer",
+    answerSubmitBtn: "Submit answer",
+    showAnswersBtn: "Show answers",
     missingName: "Please enter first and last name!",
     missingAnswer: "Please enter an answer!",
     answerSaved: "Thank you! Your answer was saved.",
@@ -318,7 +318,7 @@ function loadCoachChallenges() {
         div.innerHTML = `
           <div class="challenge-title">${ch.frage}</div>
           <div class="challenge-card-buttons">
-            <button class="btn show-answers-btn" data-id="${ch.id}" style="min-width:0;">${translations[lang].answerBtn}</button>
+            <button class="btn show-answers-btn" data-id="${ch.id}" style="min-width:0;">${translations[lang].showAnswersBtn}</button>
             <button class="btn-red delete-btn" data-id="${ch.id}" style="min-width:0;">${translations[lang].deleteBtn}</button>
           </div>
           <div style="font-size:0.98em;color:#667;margin-top:0.95em;">${translations[lang].createdOn}: ${ch.datum}</div>
@@ -335,7 +335,7 @@ function loadCoachChallenges() {
             loadCoachAnswers(ch.id, wrap, this);
           } else {
             wrap.style.display = "none";
-            this.textContent = translations[lang].answerBtn;
+            this.textContent = translations[lang].showAnswersBtn;
           }
         };
         box.appendChild(div);
@@ -413,7 +413,7 @@ function renderPublicChallenges() {
       const labelVorname = translations[lang]?.labelVorname || "Vorname";
       const labelNachname = translations[lang]?.labelNachname || "Nachname";
       const labelAntwort = translations[lang]?.answerLabel || "Deine Antwort";
-      const btnAbsenden = translations[lang]?.answerBtn || "Antwort absenden";
+      const btnAbsenden = translations[lang]?.answerSubmitBtn || "Antwort absenden";
       let html = "";
       challenges.forEach((ch, idx) => {
         let frageText;
