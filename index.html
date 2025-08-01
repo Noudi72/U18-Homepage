@@ -387,6 +387,10 @@
     <a href="https://script.google.com/macros/s/AKfycbyA6rW0ENHJSLGbi-6x1jQd6jFemVkT5jZ9_4yd9yl_7lKZpkG4MsZ0VbqIHBLPAtGAsw/exec" class="main-btn" id="btn-sponser" target="_blank"><span class="btn-emoji">🥤</span><span id="sponserTxt">Sponser Sport Food</span></a>
     <a href="https://www.ehcb.ch/de/teams/u18-elit" class="main-btn" id="btn-spirit" target="_blank"><span class="btn-emoji">🏒</span><span id="spiritTxt">Spirit Homepage</span></a>
     <a href="dashboard.html" class="main-btn" id="btn-dashboard"><span class="btn-emoji">📝</span><span id="feedbackTxt">Spieler Reflexion</span></a>
+    <a href="challenges.html" class="main-btn" id="btn-challenge">
+      <span class="btn-emoji">💡</span>
+      <span id="challengeTxt">Team-Impuls</span>
+    </a>
     <a href="tagebuch.html" class="main-btn" id="btn-tagebuch"><span class="btn-emoji">📔</span><span id="tagebuchTxt">Mein Tagebuch</span></a>
   </div>
   <div class="yellow-slogan-box">
@@ -414,6 +418,7 @@
         sponser: "Sponser Sport Food",
         spirit: "Spirit Homepage",
         feedback: "Spieler Reflexion",
+        challenge: "Team-Impuls",
         slogan: "\"OUR STRENGTH IS OUR UNITY!\"",
         tagebuch: "Mein Tagebuch",
         installHint: "Tipp: Füge diese Seite deinem Home-Bildschirm hinzu für Schnellzugriff wie eine App.",
@@ -427,6 +432,7 @@
         sponser: "Nutrition Sponser",
         spirit: "Spirit Site officiel",
         feedback: "Réflexion Joueur",
+        challenge: "Impulsion d'équipe",
         slogan: "\"NOTRE FORCE, C'EST NOTRE UNITÉ !\"",
         tagebuch: "Mon journal",
         installHint: "Astuce : Ajoute cette page à ton écran d'accueil pour un accès rapide comme une app.",
@@ -440,6 +446,7 @@
         sponser: "Sponser Sport Food",
         spirit: "Spirit Homepage",
         feedback: "Player Reflection",
+        challenge: "Team Impulse",
         slogan: "\"OUR STRENGTH IS OUR UNITY!\"",
         tagebuch: "My Diary",
         installHint: "Tip: Add this page to your Home Screen for quick access like an app.",
@@ -466,6 +473,9 @@
       document.getElementById('sponserTxt').textContent = t.sponser;
       document.getElementById('spiritTxt').textContent = t.spirit;
       document.getElementById('feedbackTxt').textContent = t.feedback;
+      if(document.getElementById('challengeTxt')) {
+        document.getElementById('challengeTxt').textContent = t.challenge;
+      }
       // Update both possible slogan ticker and fallback
       if(document.getElementById('slogan-ticker')) {
         document.getElementById('slogan-ticker').textContent = t.slogan;

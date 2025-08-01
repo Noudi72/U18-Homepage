@@ -131,6 +131,7 @@ header {
   padding: 2.1rem 1.6rem 1.5rem 1.6rem;
   margin: 0 auto 2.4rem auto;
   max-width: 420px;
+  border: 2.2px solid var(--ehcb-red);
 }
 label {
   font-size: 1.15rem;
@@ -368,10 +369,10 @@ body.dark-mode .error {
 .ticker-bar {
   width: 100%;
   max-width: 420px;
-  margin: 2.3rem auto 1.2rem auto;
+  margin: 0 auto 2.4rem auto;
+  border-radius: 18px;
   overflow: hidden;
-  border-radius: 0 0 18px 18px;
-  background: rgba(255,198,0,0.93);
+  background: rgba(210,210,210,0.18) !important;
   border: none;
   box-shadow: none;
   position: relative;
@@ -399,16 +400,222 @@ body.dark-mode .error {
 }
 
 body.dark-mode .ticker-bar {
-  background: rgba(255,199,0,0.87) !important;
+  background: rgba(24,36,50,0.52) !important;
 }
 body.dark-mode .ticker-content {
-  color: #132a49 !important;
-  text-shadow: 0 1px 1px #ffd60066;
+  color: #ffd600 !important;
+  text-shadow: 0 2px 8px #0007, 0 1px 1px #ffd60033 !important;
 }
 
 @media (max-width: 600px) {
   .ticker-bar { max-width: 97vw; margin-top: 1.1rem;}
   .ticker-content { font-size: 1em; }
 }
+body.dark-mode .form-block,
+body.dark-mode .login-card {
+  background: #13223d !important;
+  color: #fff !important;
+  border-color: #ffd600 !important;
+}
 
+body.dark-mode label,
+body.dark-mode .form-block label,
+body.dark-mode .login-card label {
+  color: #ffd600 !important;
+}
+
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+  background: #192b49 !important;
+  color: #fff !important;
+  border-color: #314c7b !important;
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode select,
+body.dark-mode textarea::placeholder {
+  color: #b8cee7 !important;
+  opacity: 1 !important;
+}
+
+body.dark-mode .btn,
+body.dark-mode button[type="submit"],
+body.dark-mode .main-btn {
+  background: #ffd600 !important;
+  color: #011631 !important;
+}
+
+body.dark-mode .error {
+  color: #ffd600 !important;
+}
 /* ========== ENDE Ticker Style ========== */
+
+
+
+.challenge-card-buttons {
+  display: flex;
+  gap: 1.15em;
+  margin-top: 1.1em;
+  align-items: stretch;
+}
+@media (max-width: 700px) {
+  .challenge-card-buttons {
+    flex-direction: column;
+    gap: 0.6em;
+  }
+}
+
+@media (max-width: 700px) {
+  .form-block, .login-card { 
+    max-width: 99vw !important; 
+    width: 99vw !important; 
+    padding: 1.2rem 0.4rem !important; 
+  }
+  .challenge-title { font-size: 1rem !important; }
+  .challenge-card-buttons { flex-direction: column; gap: 0.55em; width: 100%; }
+  .challenge-card-buttons .btn { width: 100%; min-width: 0; }
+}
+@media (max-width: 700px) {
+  .form-block, .login-card {
+    max-width: 99vw !important;
+    width: 99vw !important;
+    padding: 1.2rem 0.4rem !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  .challenge-title { font-size: 1rem !important; }
+  .challenge-card-buttons { flex-direction: column !important; gap: 0.55em !important; width: 100% !important; }
+  .challenge-card-buttons .btn { width: 100% !important; min-width: 0 !important; }
+}
+
+/* --- Footer Darkmode Fix --- */
+body.dark-mode footer {
+  color: #ffc700 !important;
+  background: none !important;
+}
+/* --- Löschen Button Rot --- */
+.btn-red, button.btn-red, .btn.btn-red, .challenge-card-buttons .btn-red {
+  background: #d0021b !important;
+  color: #fff !important;
+  border: none !important;
+  box-shadow: 0 1px 8px #d0021b22 !important;
+  transition: background 0.18s, color 0.18s;
+}
+.btn-red:hover, .btn-red:focus {
+  background: #b80017 !important;
+  color: #fff !important;
+}
+
+/* Challenge-Button-Row: Buttons gleich groß nebeneinander */
+.challenge-card-buttons .btn,
+.challenge-card-buttons .btn-red {
+  flex: 1 1 0;
+  min-width: 180px;
+  max-width: 330px;
+  width: 100%;
+  height: 58px;
+  padding: 0 0.5em;
+  font-size: 1.15rem;
+  border-radius: 13px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  box-sizing: border-box;
+  line-height: 1.15;
+}
+
+
+
+
+/* Mobile: Buttons untereinander, 100% breit */
+@media (max-width: 700px) {
+  .challenge-card-buttons {
+    flex-direction: column !important;
+    gap: 0.6em !important;
+    width: 100% !important;
+  }
+  .challenge-card-buttons .btn,
+  .challenge-card-buttons .btn-red {
+    max-width: 100% !important;
+    min-width: 100% !important;
+    height: 54px !important;
+  }
+}
+/* Delete icon styling */
+.delete-icon {
+  margin-right: 0.44em;
+  font-size: 1.12em;
+  display: inline-block;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+
+/* Überschreibt ALLE Unterschiede in Höhe, Font und Padding zwischen .btn und .btn-red in .challenge-card-buttons */
+.challenge-card-buttons .btn,
+.challenge-card-buttons .btn-red {
+  flex: 1 1 0;
+  min-width: 0 !important;
+  max-width: 330px;
+  width: 100% !important;
+  height: 58px !important;
+  font-size: 1.15rem !important;
+  padding: 0 !important;
+  border-radius: 13px !important;
+  font-weight: bold !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5em !important;
+  box-sizing: border-box !important;
+  line-height: 1.15 !important;
+  margin: 0 !important;
+}
+@media (max-width: 700px) {
+  .form-block, .login-card {
+    box-sizing: border-box !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    border-radius: 0 !important;
+    padding-left: 0.6rem !important;
+    padding-right: 0.6rem !important;
+  }
+}
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+.form-block, .login-card, .main-content {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 420px;
+  margin-left: auto;
+  margin-right: auto;
+  overflow-x: visible;
+}
+
+@media (max-width: 700px) {
+  .form-block, .login-card, .main-content {
+    max-width: 97vw !important;
+    width: 97vw !important;
+    margin-left: 1vw !important;
+    margin-right: 1vw !important;
+    border-radius: 13px !important;
+    padding: 1.1rem 0.2rem !important;
+    box-sizing: border-box !important;
+  }
+  html, body {
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+}
+
+body.dark-mode .f-antwort {
+  color: #fff !important;
+}

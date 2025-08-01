@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login – EHCB U18</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .challenge-title {
+      font-size: 1.38rem;
+      font-weight: bold;
+      text-align: center;
+      color: #002d5b;
+      margin-bottom: 1.3rem;
+      word-break: break-word;
+    }
+    @media (max-width: 700px) {
+      .form-block, .login-card {
+        max-width: 99vw !important;
+        width: 99vw !important;
+        padding: 1.2rem 0.4rem !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+      }
+      .challenge-title { font-size: 1rem !important; }
+      .challenge-card-buttons { flex-direction: column !important; gap: 0.55em !important; width: 100% !important; }
+      .challenge-card-buttons .btn { width: 100% !important; min-width: 0 !important; }
+    }
+    .main-title { color: #002d5b; }
+    body.dark-mode .main-title { color: #ffc700; }
+    body.dark-mode .challenge-title { color: #ffd600; }
+    .form-block, .ticker-bar {
+      max-width: 420px;
+      margin: 0 auto 2.4rem auto;
+      border-radius: 18px;
+    }
+    .no-challenges-msg {
+      text-align: center;
+      color: #b9c4db;
+      font-size: 1.11rem;
+      margin: 2.2em auto 0 auto;
+      padding: 0.7em 0;
+      max-width: 400px;
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back-btn">Back</a>
+  <div class="loader-backdrop" id="loader" style="display:none;">
+    <svg class="svg-loader" viewBox="0 0 60 60"><circle cx="30" cy="30" r="24" stroke-dasharray="130" stroke-dashoffset="35"></circle></svg>
+  </div>
+  <header>
+    <img src="wikinger.png" class="header-logo" alt="Logo" />
+    <div class="main-title" id="main-title">EHC BIEL-BIENNE U18-ELIT</div>
+  </header>
+  <div class="langbar" style="display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:1.1rem;">
+    <div class="lang-btns-row">
+      <button class="lang-btn" id="btn-de" data-lang="de" aria-label="Sprache Deutsch wählen" type="button">DE</button>
+      <button class="lang-btn" id="btn-fr" data-lang="fr" aria-label="Sprache Französisch wählen" type="button">FR</button>
+      <button class="lang-btn" id="btn-en" data-lang="en" aria-label="Sprache Englisch wählen" type="button">EN</button>
+    </div>
+    <div class="dark-toggle-wrap">
+      <span class="toggle-switch" id="darkToggle" tabindex="0" aria-label="Dark Mode Toggle">
+        <span class="slider"></span>
+      </span>
+      <span class="dark-toggle-label" id="darkToggleLabel" title="Dark Mode">🌙</span>
+    </div>
+  </div>
+  <main class="main-content">
+    <section class="form-block">
+      <div class="challenge-title" id="challengeListTitle">Team-Impuls – Deine Antwort zählt!</div>
+      <div id="public-challenge-list"></div>
+    </section>
+    <!-- Coach Login Card -->
+    <section class="form-block" id="coach-login-section">
+      <div class="challenge-title" id="coachLoginTitle">🔐 Coach Dashboard Login</div>
+      <form id="coachLoginForm" autocomplete="off">
+        <label for="coach-passwort" id="labelCoachPasswort">Passwort</label>
+        <input type="password" id="coach-passwort" name="coach-passwort" autocomplete="current-password">
+        <button type="submit" id="coach-login-btn" class="btn">Login</button>
+        <div id="coach-login-feedback" class="error"></div>
+      </form>
+    </section>
+  </main>
+  <!-- Spieler-Bereich entfernt -->
+  <!-- <div id="player-challenges-area" style="display:none;"></div> -->
+  <div id="coach-challenge-area" style="display:none;"></div>
+  <div class="ticker-bar">
+    <div class="ticker-content" id="tickerText">"OUR STRENGTH IS OUR UNITY!"</div>
+  </div>
+  <footer>
+    © 2025 EHC Biel-Bienne U18-Elit
+  </footer>
+<script>
+function showLoader(show=true) {
+  document.getElementById('loader').style.display = show ? 'flex' : 'none';
+}
+// Dark Mode Toggle
+const body = document.body;
+const darkToggle = document.getElementById('darkToggle');
+const darkToggleLabel = document.getElementById('darkToggleLabel');
+function setDarkMode(on) {
+  body.classList.toggle('dark-mode', on);
+  darkToggle.classList.toggle('active', on);
+  localStorage.setItem('ehcb_dashboard_darkmode', on ? '1' : '0');
+  darkToggleLabel.textContent = on ? '☀️' : '🌙';
+}
+darkToggle.addEventListener('click', () => setDarkMode(!body.classList.contains('dark-mode')));
+darkToggle.addEventListener('keypress', e => { if(e.key === ' ' || e.key === 'Enter') setDarkMode(!body.classList.contains('dark-mode')); });
+darkToggleLabel.addEventListener('click', () => setDarkMode(!body.classList.contains('dark-mode')));
+if(localStorage.getItem('ehcb_dashboard_darkmode') === '1') setDarkMode(true);
+</script>
+<script>
+// Übersetzungen
+const translations = {
+  de: {
+    challengeTitle: "Team-Impuls – Deine Antwort zählt!",
+    coachNewChallengeTitle: "Neuen Impuls erstellen",
+    labelVorname: "Vorname",
+    labelNachname: "Nachname",
+    labelSpielerPasswort: "Passwort",
+    labelCoachPasswort: "Passwort",
+    loginBtn: "Login",
+    deleteBtn: "Löschen",
+    answerBtn: "Antworten ansehen",
+    saveChallengeBtn: "Impuls speichern",
+    challengeSaved: "Impuls gespeichert!",
+    questionLabel: "Frage*",
+    createdOn: "Erstellt am",
+    tickerText: '"OUR STRENGTH IS OUR UNITY!"',
+    footer: "© 2025 EHC Biel-Bienne U18-Elit",
+    impulsText: "Gerne möchten Sven und ich von euch einen persönlichen Impuls von euch über das Trainingslager. Schreibt uns in ein paar Sätzen, was euch gefallen, oder weniger gefallen hat. Die Antworten sehen nur Sven und ich, ihr braucht also keine Scheu zu haben ;).",
+    answerLabel: "Deine Antwort",
+    answerBtn: "Antwort absenden",
+    missingName: "Bitte Vorname und Nachname eingeben!",
+    missingAnswer: "Bitte gib eine Antwort ein!",
+    answerSaved: "Danke! Deine Antwort wurde gespeichert.",
+    answerError: "Fehler beim Speichern!"
+  },
+  fr: {
+    challengeTitle: "Défi d'équipe – Ta réponse compte !",
+    coachNewChallengeTitle: "Créer un nouveau défi",
+    labelVorname: "Prénom",
+    labelNachname: "Nom",
+    labelSpielerPasswort: "Mot de passe",
+    labelCoachPasswort: "Mot de passe",
+    loginBtn: "Connexion",
+    deleteBtn: "Supprimer",
+    answerBtn: "Voir réponses",
+    saveChallengeBtn: "Enregistrer le défi",
+    challengeSaved: "Défi enregistré !",
+    questionLabel: "Question*",
+    createdOn: "Créé le",
+    tickerText: '"NOTRE FORCE, C’EST NOTRE UNITÉ !"',
+    footer: "© 2025 EHC Biel-Bienne U18-Elit",
+    impulsText: "Sven et moi aimerions recevoir de votre part un retour personnel sur le camp d’entraînement. Écrivez-nous en quelques phrases ce que vous avez aimé ou moins aimé. Seuls Sven et moi verrons vos réponses, alors n'ayez aucune crainte ;).",
+    answerLabel: "Ta réponse",
+    answerBtn: "Envoyer la réponse",
+    missingName: "Merci de saisir le prénom et le nom !",
+    missingAnswer: "Merci d’écrire une réponse !",
+    answerSaved: "Merci ! Ta réponse a été enregistrée.",
+    answerError: "Erreur lors de l'enregistrement !"
+  },
+  en: {
+    challengeTitle: "Team Impulse – Your answer counts!",
+    coachNewChallengeTitle: "Create New Impulse",
+    labelVorname: "First Name",
+    labelNachname: "Last Name",
+    labelSpielerPasswort: "Password",
+    labelCoachPasswort: "Password",
+    loginBtn: "Login",
+    deleteBtn: "Delete",
+    answerBtn: "Show answers",
+    saveChallengeBtn: "Save impulse",
+    challengeSaved: "Impulse saved!",
+    questionLabel: "Question*",
+    createdOn: "Created on",
+    tickerText: '"OUR STRENGTH IS OUR UNITY!"',
+    footer: "© 2025 EHC Biel-Bienne U18-Elit",
+    impulsText: "Sven and I would like to receive your personal feedback on the training camp. Please write us a few sentences about what you liked or didn’t like. Only Sven and I will see your answers, so don’t be shy ;).",
+    answerLabel: "Your answer",
+    answerBtn: "Submit answer",
+    missingName: "Please enter first and last name!",
+    missingAnswer: "Please enter an answer!",
+    answerSaved: "Thank you! Your answer was saved.",
+    answerError: "Error while saving!"
+  }
+};
+let lang = localStorage.getItem("challenge_lang") || "de";
+function setLang(l) {
+  showLoader(true);
+  lang = l;
+  // Challenge List Title
+  document.getElementById("challengeListTitle").textContent = translations[lang].challengeTitle;
+  // Coach Login
+  document.getElementById("coachLoginTitle").textContent = "🔐 Coach Dashboard Login";
+  document.getElementById("labelCoachPasswort").textContent = translations[lang].labelCoachPasswort;
+  document.getElementById("coach-login-btn").textContent = translations[lang].loginBtn;
+  // Ticker & Footer
+  document.getElementById("tickerText").textContent = translations[lang].tickerText;
+  document.querySelector("footer").textContent = translations[lang].footer;
+  // Buttons aktiv setzen
+  ["de","fr","en"].forEach(l2 => {
+    const btn = document.getElementById("btn-"+l2);
+    if(btn) btn.classList.toggle("active", l2===lang);
+  });
+  // Coach-Bereich neu rendern
+  if (document.getElementById('coach-challenge-area').style.display !== "none") renderCoachDashboard();
+  localStorage.setItem("challenge_lang", lang);
+  renderPublicChallenges();
+  setTimeout(() => showLoader(false), 450);
+}
+["de","fr","en"].forEach(l => {
+  const btn = document.getElementById("btn-"+l);
+  if(btn) btn.addEventListener("click", ()=>setLang(l));
+});
+setLang(lang);
+</script>
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbyVUC7-Zq2m_K6LSNhm7gQySSyzPqemzZphwHlXgwjLpu_dJjoA1Lk9-yQ-p3gmpqc8/exec";
+// --- Coach Login Logik ---
+document.getElementById('coachLoginForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const passwort = document.getElementById('coach-passwort').value;
+  const feedback = document.getElementById('coach-login-feedback');
+  const btn = document.getElementById('coach-login-btn');
+  feedback.textContent = "";
+  btn.disabled = true;
+  btn.textContent = "Login...";
+  if (passwort !== "Coach7274") {
+    feedback.style.color = "#d0021b";
+    feedback.textContent = "Falsches Passwort!";
+    btn.disabled = false;
+    btn.textContent = translations[lang].loginBtn;
+    return;
+  }
+  setTimeout(() => {
+    feedback.style.color = "#249900";
+    feedback.textContent = "Login erfolgreich!";
+    btn.disabled = false;
+    btn.textContent = translations[lang].loginBtn;
+    setTimeout(() => { feedback.textContent = ""; }, 2500);
+    // Coach-Login-Formular ausblenden, Coach-Challenge-Area einblenden, Dashboard rendern:
+    document.getElementById('coach-login-section').style.display = "none";
+    document.getElementById('coach-challenge-area').style.display = "block";
+    renderCoachDashboard();
+  }, 900);
+});
+// ==== COACH CHALLENGE DASHBOARD ====
+function renderCoachDashboard() {
+  // Spieler-View entfernen, wenn Coach eingeloggt ist
+  var playerBlock = document.querySelector('.form-block');
+  if (playerBlock) playerBlock.style.display = "none";
+
+  // Öffentliche Challenge-Liste entfernen/ausblenden
+  var publicList = document.getElementById('public-challenge-list');
+  if (publicList) publicList.innerHTML = '';
+
+  // Section mit dem Title "Team Challenge – Deine Antwort zählt!" entfernen (nur für Spieler)
+  var challengeTitleSection = document.getElementById('challengeListTitle');
+  if (challengeTitleSection && challengeTitleSection.parentElement) {
+    challengeTitleSection.parentElement.style.display = "none";
+  }
+
+  const area = document.getElementById('coach-challenge-area');
+  area.innerHTML = `
+    <section class="form-block">
+      <div class="challenge-title">${translations[lang].coachNewChallengeTitle}</div>
+      <form id="coachNewChallengeForm" autocomplete="off" style="margin-bottom:1.2rem;">
+        <label for="newChallengeFrage" id="labelChallengeFrage">${translations[lang].questionLabel}</label>
+        <textarea id="newChallengeFrage" required style="min-height: 58px;"></textarea>
+        <button type="submit" id="add-challenge-btn" class="btn">${translations[lang].saveChallengeBtn}</button>
+        <div id="new-challenge-feedback" class="error"></div>
+      </form>
+    </section>
+    <div id="coach-challenge-list"></div>
+  `;
+  // Das Challenge-Formular bleibt in der form-block, die Challenge-Liste ist außerhalb.
+  document.getElementById('coachNewChallengeForm').onsubmit = function(e) {
+    e.preventDefault();
+    const frage = document.getElementById('newChallengeFrage').value.trim();
+    const feedback = document.getElementById('new-challenge-feedback');
+    if (!frage) { feedback.textContent = "Bitte Frage eingeben!"; return; }
+    feedback.textContent = "";
+    document.getElementById('add-challenge-btn').disabled = true;
+    showLoader(true);
+    fetch(API_URL + "?action=addChallenge&frage=" + encodeURIComponent(frage))
+      .then(r=>r.json()).then(() => {
+        document.getElementById('newChallengeFrage').value = "";
+        feedback.style.color = "#249900";
+        feedback.textContent = translations[lang].challengeSaved;
+        setTimeout(()=>{ feedback.textContent = ""; }, 1400);
+        loadCoachChallenges();
+      }).finally(()=> {
+        document.getElementById('add-challenge-btn').disabled = false;
+        showLoader(false);
+      });
+  };
+  loadCoachChallenges();
+}
+function loadCoachChallenges() {
+  showLoader(true);
+  fetch(API_URL + "?action=listChallenges")
+    .then(r => r.json())
+    .then(data => {
+      const challenges = (data.challenges || []).reverse();
+      const box = document.getElementById('coach-challenge-list');
+      box.innerHTML = "";
+      if (!challenges.length) {
+        box.innerHTML = `<div class="no-challenges-msg"><i>Keine Impulse vorhanden.</i></div>`;
+        showLoader(false); return;
+      }
+      challenges.forEach(ch => {
+        // Jede Challenge als einzelne Card (form-block) außerhalb der großen Box
+        const div = document.createElement('section');
+        div.className = "form-block";
+        div.style.marginBottom = "1.6em";
+        div.innerHTML = `
+          <div class="challenge-title">${ch.frage}</div>
+          <div class="challenge-card-buttons">
+            <button class="btn show-answers-btn" data-id="${ch.id}" style="min-width:0;">${translations[lang].answerBtn}</button>
+            <button class="btn-red delete-btn" data-id="${ch.id}" style="min-width:0;">${translations[lang].deleteBtn}</button>
+          </div>
+          <div style="font-size:0.98em;color:#667;margin-top:0.95em;">${translations[lang].createdOn}: ${ch.datum}</div>
+          <div class="answer-list-wrap" style="display:none;"></div>
+        `;
+        // Überprüfe, ob die Klasse .btn-red am Delete-Button vorhanden ist:
+        const deleteBtn = div.querySelector('.delete-btn');
+        if (!deleteBtn.classList.contains('btn-red')) {
+          console.error('btn-red-Klasse fehlt am Delete-Button!');
+        }
+        div.querySelector('.show-answers-btn').onclick = function() {
+          const wrap = div.querySelector('.answer-list-wrap');
+          if (wrap.style.display !== "block") {
+            loadCoachAnswers(ch.id, wrap, this);
+          } else {
+            wrap.style.display = "none";
+            this.textContent = translations[lang].answerBtn;
+          }
+        };
+        box.appendChild(div);
+        // Delete-Button-Handler direkt zuweisen
+        div.querySelector('.delete-btn').onclick = function() {
+          const challengeId = this.dataset.id;
+          if (!confirm("Impuls wirklich löschen?")) return;
+          showLoader(true);
+          fetch(API_URL + "?action=deleteChallenge&id=" + encodeURIComponent(challengeId))
+            .then(r => r.json())
+            .then((result) => {
+              if(result.success || result.status === "success") {
+                loadCoachChallenges();
+              } else {
+                alert("Konnte nicht löschen. Fehler vom Server: " + (result.error || JSON.stringify(result)));
+              }
+            })
+            .catch(() => { 
+              alert("Netzwerk- oder Serverfehler beim Löschen!"); 
+            })
+            .finally(() => { showLoader(false); });
+        };
+      });
+      showLoader(false);
+    })
+    .catch(() => { showLoader(false); });
+}
+function loadCoachAnswers(challengeId, wrap, btn) {
+  btn.textContent = "Lade...";
+  showLoader(true);
+  fetch(API_URL + "?action=listAnswers&challenge_id=" + encodeURIComponent(challengeId))
+    .then(r => r.json())
+    .then(data => {
+      const answers = data.answers || [];
+      let html = `<div style="margin-top:0.7em;"></div>`;
+      if (!answers.length) {
+        html += "<div style='color:#888;'>Keine Antworten vorhanden.</div>";
+      } else {
+        html += `<div style="margin-bottom:0.4em;"><b>Alle Antworten:</b></div>`;
+        answers.forEach(a => {
+          html += `
+            <div class="feedback-card" style="margin-bottom:0.7em;">
+              <div class="f-name" style="font-weight:700;font-size:1.08em;">${a.vorname} ${a.nachname}</div>
+              <div class="f-antwort" style="font-size:0.96em;">${a.antwort}</div>
+              <div style="font-size:0.89em;color:#99a;">${a.zeitstempel}</div>
+            </div>`;
+        });
+      }
+      wrap.innerHTML = html;
+      wrap.style.display = "block";
+      btn.textContent = "Antworten ausblenden";
+      showLoader(false);
+    })
+    .catch(() => {
+      wrap.innerHTML = "<div style='color:#d0021b;'>Fehler beim Laden der Antworten.</div>";
+      wrap.style.display = "block";
+      btn.textContent = "Antworten ausblenden";
+      showLoader(false);
+    });
+}
+
+// ==== ÖFFENTLICHE CHALLENGE-LISTE ====
+function renderPublicChallenges() {
+  const area = document.getElementById('public-challenge-list');
+  area.innerHTML = '<div>Lade Impulse...</div>';
+  fetch(API_URL + "?action=listChallenges")
+    .then(r => r.json())
+    .then(data => {
+      const challenges = (data.challenges || []).reverse();
+      if (!challenges.length) {
+        area.innerHTML = `<div class="no-challenges-msg"><i>Keine Impulse vorhanden.</i></div>`;
+        return;
+      }
+      // Sprachabhängige Labels holen
+      const labelVorname = translations[lang]?.labelVorname || "Vorname";
+      const labelNachname = translations[lang]?.labelNachname || "Nachname";
+      const labelAntwort = translations[lang]?.answerLabel || "Deine Antwort";
+      const btnAbsenden = translations[lang]?.answerBtn || "Antwort absenden";
+      let html = "";
+      challenges.forEach((ch, idx) => {
+        let frageText;
+        if (idx === 0 && translations[lang] && translations[lang].impulsText) {
+          frageText = translations[lang].impulsText;
+        } else {
+          frageText = ch.frage;
+        }
+        html += `
+        <section class="form-block" style="margin-bottom:1.6em;">
+          <div class="challenge-title" style="font-size:1.12rem; margin-bottom:0.3em;">${frageText}</div>
+          <form class="challenge-answer-form" data-id="${ch.id}" style="margin-top:1em;">
+            <label>${labelVorname}</label>
+            <input type="text" name="vorname" required autocomplete="off" maxlength="40">
+            <label>${labelNachname}</label>
+            <input type="text" name="nachname" required autocomplete="off" maxlength="40">
+            <label>${labelAntwort}</label>
+            <textarea name="antwort" required style="min-height:48px;"></textarea>
+            <button type="submit" class="btn" style="margin-top:0.8em;">${btnAbsenden}</button>
+            <div class="answer-feedback error"></div>
+          </form>
+        </section>
+        `;
+      });
+      area.innerHTML = html;
+      // Eventlistener für alle Antwortformulare
+      document.querySelectorAll('.challenge-answer-form').forEach(form => {
+        form.onsubmit = function(ev) {
+          ev.preventDefault();
+          const challengeId = form.getAttribute("data-id");
+          const vorname = form.querySelector('[name="vorname"]').value.trim();
+          const nachname = form.querySelector('[name="nachname"]').value.trim();
+          const antwort = form.querySelector('[name="antwort"]').value.trim();
+          const feedbackDiv = form.querySelector('.answer-feedback');
+          if (!vorname || !nachname) {
+            feedbackDiv.textContent = translations[lang]?.missingName || "Bitte Vorname und Nachname eingeben!";
+            feedbackDiv.style.color = "#d0021b";
+            return;
+          }
+          if (!antwort) {
+            feedbackDiv.textContent = translations[lang]?.missingAnswer || "Bitte gib eine Antwort ein!";
+            feedbackDiv.style.color = "#d0021b";
+            return;
+          }
+          feedbackDiv.textContent = "";
+          form.querySelector("button").disabled = true;
+          showLoader(true);
+          fetch(API_URL + "?action=addAnswer"
+            + "&challenge_id=" + encodeURIComponent(challengeId)
+            + "&vorname=" + encodeURIComponent(vorname)
+            + "&nachname=" + encodeURIComponent(nachname)
+            + "&antwort=" + encodeURIComponent(antwort)
+          )
+            .then(r => r.json())
+            .then(() => {
+              feedbackDiv.style.color = "#249900";
+              //feedbackDiv.textContent = "Antwort gespeichert!";
+              // Felder deaktivieren
+              form.querySelectorAll('input, textarea, button').forEach(f => f.disabled = true);
+              setTimeout(() => {
+                feedbackDiv.textContent = translations[lang]?.answerSaved || "Danke! Deine Antwort wurde gespeichert.";
+                feedbackDiv.style.color = "#249900";
+              }, 800);
+            })
+            .catch(() => {
+              feedbackDiv.textContent = translations[lang]?.answerError || "Fehler beim Speichern!";
+              feedbackDiv.style.color = "#d0021b";
+            })
+            .finally(() => {
+              showLoader(false);
+            });
+        };
+      });
+    })
+    .catch(() => { area.innerHTML = "<div style='color:#d0021b;'>Fehler beim Laden der Impulse.</div>"; });
+}
+
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    if (typeof renderPublicChallenges === "function") {
+      setLang(lang);
+      showLoader(false);
+    }
+  });
+</script>
+</body>
+</html>
