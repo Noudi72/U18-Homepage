@@ -1,47 +1,118 @@
 <!DOCTYPE html>
 <html lang="de" data-theme="light">
 <head>
+  <style>
+    /* === Mobile große Sortier-Buttons und Suchfeld === */
+    @media (max-width: 700px) {
+      .sort-answers-row {
+        flex-direction: column !important;
+        gap: 0.7em !important;
+        align-items: stretch !important;
+        width: 100% !important;
+        margin-bottom: 0.7em !important;
+      }
+      .btn-sort-answers,
+      .sort-answers-row .btn {
+        width: 100% !important;
+        min-width: 0 !important;
+        font-size: 1.18rem !important;
+        padding: 1.18em 0 !important;
+        border-radius: 13px !important;
+        letter-spacing: 0.01em;
+        margin-bottom: 0 !important;
+        box-sizing: border-box !important;
+        font-weight: bold !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+      .input-search-answers {
+        font-size: 1.15rem !important;
+        padding: 1.1em 1.18em !important;
+        border-radius: 13px !important;
+        margin-bottom: 1em !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        min-width: 0 !important;
+      }
+    }
+    .sort-answers-row {
+      display: flex;
+      gap: 0.7em;
+      margin-bottom: 0.9em;
+      align-items: center;
+    }
+  </style>
+  <style>
+  @media (max-width: 700px) {
+    .form-block {
+      width: 96vw !important;
+      max-width: 99vw !important;
+      min-width: 0 !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+      padding-left: 10px !important;
+      padding-right: 10px !important;
+      box-sizing: border-box !important;
+      overflow-x: hidden !important;
+    }
+    html, body {
+      width: 100vw !important;
+      max-width: 100vw !important;
+      overflow-x: hidden !important;
+      box-sizing: border-box !important;
+    }
+  }
+  .btn-sort-answers.active {
+    background: #ffc700;
+    color: #002d5b;
+    border: 2px solid #ffc700;
+  }
+  .input-search-answers:focus {
+    border-color: #ffc700;
+    outline: none;
+  }
+  </style>
   <meta charset="UTF-8" />
   <title>Login – EHCB U18</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
   <style>
-    .challenge-title {
-      font-size: 1.38rem;
-      font-weight: bold;
-      text-align: center;
-      color: #002d5b;
-      margin-bottom: 1.3rem;
-      word-break: break-word;
-    }
-    @media (max-width: 700px) {
-      .form-block, .login-card {
-        max-width: 99vw !important;
-        width: 99vw !important;
-        padding: 1.2rem 0.4rem !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-      }
-      .challenge-title { font-size: 1rem !important; }
-      .challenge-card-buttons { flex-direction: column !important; gap: 0.55em !important; width: 100% !important; }
-      .challenge-card-buttons .btn { width: 100% !important; min-width: 0 !important; }
-    }
-    .main-title { color: #002d5b; }
-    body.dark-mode .main-title { color: #ffc700; }
-    body.dark-mode .challenge-title { color: #ffd600; }
-    .form-block, .ticker-bar {
-      max-width: 420px;
-      margin: 0 auto 2.4rem auto;
-      border-radius: 18px;
-    }
-    .no-challenges-msg {
-      text-align: center;
-      color: #b9c4db;
-      font-size: 1.11rem;
-      margin: 2.2em auto 0 auto;
-      padding: 0.7em 0;
-      max-width: 400px;
-    }
+  .challenge-title {
+    font-size: 1.38rem;
+    font-weight: bold;
+    text-align: center;
+    color: #002d5b;
+    margin-bottom: 1.3rem;
+    word-break: break-word;
+  }
+  .impuls-text {
+    text-align: center;
+    font-size: 1.13rem;
+    font-weight: 500;
+    margin-bottom: 1em;
+    color: #002d5b;
+  }
+  body.dark-mode .impuls-text {
+    color: #ffd600;
+  }
+  .main-title { color: #002d5b; }
+  body.dark-mode .main-title { color: #ffc700; }
+  body.dark-mode .challenge-title { color: #ffd600; }
+  .form-block, .ticker-bar {
+    max-width: 420px;
+    margin: 0 auto 2.4rem auto;
+    border-radius: 18px;
+    box-sizing: border-box;
+  }
+  .no-challenges-msg {
+    text-align: center;
+    color: #b9c4db;
+    font-size: 1.11rem;
+    margin: 2.2em auto 0 auto;
+    padding: 0.7em 0;
+    max-width: 400px;
+  }
   </style>
 </head>
 <body>
@@ -66,25 +137,27 @@
       <span class="dark-toggle-label" id="darkToggleLabel" title="Dark Mode">🌙</span>
     </div>
   </div>
-  <main class="main-content">
-    <section class="form-block">
-      <div class="challenge-title" id="challengeListTitle">Team-Impuls – Deine Antwort zählt!</div>
-      <div id="public-challenge-list"></div>
-    </section>
-    <!-- Coach Login Card -->
-    <section class="form-block" id="coach-login-section">
-      <div class="challenge-title" id="coachLoginTitle">🔐 Coach Dashboard Login</div>
-      <form id="coachLoginForm" autocomplete="off">
-        <label for="coach-passwort" id="labelCoachPasswort">Passwort</label>
-        <input type="password" id="coach-passwort" name="coach-passwort" autocomplete="current-password">
-        <button type="submit" id="coach-login-btn" class="btn">Login</button>
-        <div id="coach-login-feedback" class="error"></div>
-      </form>
-    </section>
-  </main>
-  <!-- Spieler-Bereich entfernt -->
-  <!-- <div id="player-challenges-area" style="display:none;"></div> -->
-  <div id="coach-challenge-area" style="display:none;"></div>
+  <!-- NEUER WRAPPER (WICHTIG FÜR MOBIL): -->
+  <div class="main-content-wrapper" style="width:100%;max-width:100vw;overflow-x:hidden;margin:0 auto;box-sizing:border-box;">
+    <main class="main-content">
+      <section class="form-block">
+        <div class="challenge-title" id="challengeListTitle">Team-Impuls – Deine Antwort zählt!</div>
+        <div id="public-challenge-list"></div>
+      </section>
+      <!-- Coach Login Card -->
+      <section class="form-block" id="coach-login-section">
+        <div class="challenge-title" id="coachLoginTitle">🔐 Coach Dashboard Login</div>
+        <form id="coachLoginForm" autocomplete="off">
+          <label for="coach-passwort" id="labelCoachPasswort">Passwort</label>
+          <input type="password" id="coach-passwort" name="coach-passwort" autocomplete="current-password">
+          <button type="submit" id="coach-login-btn" class="btn">Login</button>
+          <div id="coach-login-feedback" class="error"></div>
+        </form>
+      </section>
+    </main>
+    <!-- Coach-Bereich -->
+    <div id="coach-challenge-area" style="display:none;"></div>
+  </div>
   <div class="ticker-bar">
     <div class="ticker-content" id="tickerText">"OUR STRENGTH IS OUR UNITY!"</div>
   </div>
@@ -319,7 +392,7 @@ function loadCoachChallenges() {
           <div class="challenge-title">${ch.frage}</div>
           <div class="challenge-card-buttons">
             <button class="btn show-answers-btn" data-id="${ch.id}" style="min-width:0;">${translations[lang].showAnswersBtn}</button>
-            <button class="btn-red delete-btn" data-id="${ch.id}" style="min-width:0;">${translations[lang].deleteBtn}</button>
+            <button class="btn btn-red delete-btn" data-id="${ch.id}" style="min-width:0;">${translations[lang].deleteBtn}</button>
           </div>
           <div style="font-size:0.98em;color:#667;margin-top:0.95em;">${translations[lang].createdOn}: ${ch.datum}</div>
           <div class="answer-list-wrap" style="display:none;"></div>
@@ -369,22 +442,74 @@ function loadCoachAnswers(challengeId, wrap, btn) {
   fetch(API_URL + "?action=listAnswers&challenge_id=" + encodeURIComponent(challengeId))
     .then(r => r.json())
     .then(data => {
-      const answers = data.answers || [];
-      let html = `<div style="margin-top:0.7em;"></div>`;
-      if (!answers.length) {
-        html += "<div style='color:#888;'>Keine Antworten vorhanden.</div>";
-      } else {
-        html += `<div style="margin-bottom:0.4em;"><b>Alle Antworten:</b></div>`;
-        answers.forEach(a => {
-          html += `
-            <div class="feedback-card" style="margin-bottom:0.7em;">
-              <div class="f-name" style="font-weight:700;font-size:1.08em;">${a.vorname} ${a.nachname}</div>
-              <div class="f-antwort" style="font-size:0.96em;">${a.antwort}</div>
-              <div style="font-size:0.89em;color:#99a;">${a.zeitstempel}</div>
-            </div>`;
-        });
+      let answers = data.answers || [];
+      let sortType = "desc";
+      let searchTerm = "";
+
+      // Render Controls (nur EIN MAL anlegen!)
+      wrap.innerHTML = `
+  <div class="sort-answers-row" style="margin-bottom:0.7em;display:flex;gap:0.7em;flex-wrap:wrap;align-items:center;">
+    <button class="btn btn-sort-answers active" data-sort="desc" style="width:100%;">Neuste</button>
+    <button class="btn btn-sort-answers" data-sort="asc" style="width:100%;">Älteste</button>
+  </div>
+  <div style="margin-bottom:0.7em;">
+    <input type="text" class="input-search-answers" placeholder="Name suchen..." style="width:100%;max-width:340px;" />
+  </div>
+  <div id="answers-list"></div>
+      `;
+
+      const inputSearch = wrap.querySelector('.input-search-answers');
+      const answersListDiv = wrap.querySelector('#answers-list');
+
+      function filterAndSort(list) {
+        let filtered = list;
+        if (searchTerm) {
+          filtered = list.filter(a =>
+            (a.vorname + " " + a.nachname).toLowerCase().includes(searchTerm) ||
+            (a.nachname + " " + a.vorname).toLowerCase().includes(searchTerm)
+          );
+        }
+        if (sortType === "desc") filtered.sort((a, b) => new Date(b.zeitstempel) - new Date(a.zeitstempel));
+        else if (sortType === "asc") filtered.sort((a, b) => new Date(a.zeitstempel) - new Date(b.zeitstempel));
+        return filtered;
       }
-      wrap.innerHTML = html;
+
+      function renderList() {
+        let sorted = filterAndSort(answers);
+        let html = "";
+        if (!sorted.length) {
+          html = "<div style='color:#888;'>Keine Antworten vorhanden.</div>";
+        } else {
+          html += `<div style="margin-bottom:0.4em;"><b>Alle Antworten:</b></div>`;
+          sorted.forEach(a => {
+            html += `
+              <div class="feedback-card" style="margin-bottom:0.7em;">
+                <div class="f-name" style="font-weight:700;font-size:1.08em;">${a.vorname} ${a.nachname}</div>
+                <div class="f-antwort" style="font-size:0.96em;">${a.antwort}</div>
+                <div style="font-size:0.89em;color:#99a;">${a.zeitstempel}</div>
+              </div>`;
+          });
+        }
+        answersListDiv.innerHTML = html;
+      }
+
+      // Sortier-Buttons
+      wrap.querySelectorAll(".btn-sort-answers").forEach(btnSort => {
+        btnSort.onclick = function() {
+          wrap.querySelectorAll(".btn-sort-answers").forEach(b=>b.classList.remove("active"));
+          btnSort.classList.add("active");
+          sortType = btnSort.getAttribute("data-sort");
+          renderList();
+        };
+      });
+
+      // Suchfeld (oninput)
+      inputSearch.oninput = function() {
+        searchTerm = this.value.trim().toLowerCase();
+        renderList();
+      };
+
+      renderList();
       wrap.style.display = "block";
       btn.textContent = "Antworten ausblenden";
       showLoader(false);
@@ -416,16 +541,13 @@ function renderPublicChallenges() {
       const btnAbsenden = translations[lang]?.answerSubmitBtn || "Antwort absenden";
       let html = "";
       challenges.forEach((ch, idx) => {
-        let frageText;
-        if (idx === 0 && translations[lang] && translations[lang].impulsText) {
-          frageText = translations[lang].impulsText;
-        } else {
-          frageText = ch.frage;
-        }
+        let frageText = (idx === 0 && translations[lang] && translations[lang].impulsText)
+          ? translations[lang].impulsText
+          : ch.frage;
+        // Nur die Impulsfrage und das Formular, KEIN form-block hier!
         html += `
-        <section class="form-block" style="margin-bottom:1.6em;">
-          <div class="challenge-title" style="font-size:1.12rem; margin-bottom:0.3em;">${frageText}</div>
-          <form class="challenge-answer-form" data-id="${ch.id}" style="margin-top:1em;">
+          <div class="impuls-text" style="margin-bottom:0.6em;">${frageText}</div>
+          <form class="challenge-answer-form" data-id="${ch.id}" style="margin-bottom:2.2em;margin-top:0.7em;">
             <label>${labelVorname}</label>
             <input type="text" name="vorname" required autocomplete="off" maxlength="40">
             <label>${labelNachname}</label>
@@ -435,7 +557,6 @@ function renderPublicChallenges() {
             <button type="submit" class="btn" style="margin-top:0.8em;">${btnAbsenden}</button>
             <div class="answer-feedback error"></div>
           </form>
-        </section>
         `;
       });
       area.innerHTML = html;

@@ -324,35 +324,27 @@ body.dark-mode .ehcb-back-btn:hover {
 
 
 @media (max-width: 700px) {
-  .main-content { max-width: 96vw !important; width: 96vw !important; margin-left: 2vw !important; margin-right: 2vw !important; padding: 1rem 0.5rem !important; box-sizing: border-box !important; }
-  .form-block, .login-card { max-width: 96vw !important; width: 96vw !important; margin-left: 2vw !important; margin-right: 2vw !important; padding: 1rem 0.5rem !important; box-sizing: border-box !important; }
-  .lang-btn { font-size: 1rem; padding: 12px 0.1rem 12px 0.1rem; min-width: 31vw;}
-  .back-btn, .ehcb-back-btn { font-size: 1.04rem; padding: 8px 15px 8px 10px;}
   .challenge-title { font-size: 1rem !important; }
-  .challenge-card-buttons { flex-direction: column !important; gap: 0.55em !important; width: 100% !important; }
-  .challenge-card-buttons .btn { width: 100% !important; min-width: 0 !important; }
-  .form-block, .login-card {
-    margin-left: auto !important;
-    margin-right: auto !important;
-  }
+  .challenge-card-buttons { flex-direction: column; gap: 0.55em; width: 100%; }
+  .challenge-card-buttons .btn { width: 100%; min-width: 0; }
 }
 
 @media (max-width: 600px) {
+  html, body {
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
   .form-block, .login-card, .main-content {
-    max-width: 96vw !important;
-    width: 96vw !important;
-    margin-left: 2vw !important;
-    margin-right: 2vw !important;
-    border-radius: 10px !important;
-    padding: 0.9rem 0.2rem !important;
     box-sizing: border-box !important;
+    width: 97vw !important;
+    max-width: 420px !important;
+    min-width: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding: 16px 1.5vw 16px 1.5vw !important;
+    border-radius: 16px !important;
+    overflow-x: hidden !important;
   }
-  .main-content {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-  .lang-btn { font-size: 1rem; padding: 12px 0.1rem 12px 0.1rem; min-width: 31vw;}
-  .back-btn, .ehcb-back-btn { font-size: 1.04rem; padding: 8px 15px 8px 10px;}
 }
 
 /* ------------------------- */
@@ -610,4 +602,155 @@ body.dark-mode .f-antwort {
 }
 body.dark-mode .no-challenge-msg {
   color: #c9daff !important;
+}
+.no-challenge-msg {
+  text-align: center;
+  color: #5e7ca4 !important;
+  font-size: 1.11rem;
+  margin: 1.7rem 0 2.5rem 0;
+}
+body.dark-mode .no-challenge-msg {
+  color: #c9daff !important;
+}
+@media (max-width: 600px) {
+  .form-block, .login-card, .main-content {
+    box-sizing: border-box !important;
+    width: 96vw !important;
+    max-width: 420px !important;
+    min-width: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+    overflow-x: hidden !important;
+  }
+  .form-block {
+    border-radius: 16px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  html, body {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-width: 0 !important;
+    overflow-x: hidden !important;
+  }
+}
+@media (max-width: 700px) {
+  .main-content {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+}
+@media (max-width: 600px) {
+  html, body {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-width: 0 !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+  }
+  .form-block, .login-card {
+    box-sizing: border-box !important;
+    width: 97vw !important;
+    max-width: 99vw !important;
+    min-width: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    border-radius: 16px !important;
+    overflow-x: hidden !important;
+  }
+}
+.btn-small {
+  font-size: 1em;
+  padding: 0.25em 0.85em;
+  border-radius: 6px;
+  margin-bottom: 0.3em;
+  background: #eee;
+  color: #002d5b;
+  border: 1px solid #ccd3e5;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+.btn-small.active,
+.btn-small:hover {
+  background: #ffd600;
+  color: #002d5b;
+  border-color: #ffc700;
+}
+
+
+@media (max-width: 700px) {
+  .btn,
+  .btn-red {
+    width: 100% !important;
+    min-width: 0 !important;
+    font-size: 1.13rem !important;
+    padding: 1.15em 0 !important;
+    border-radius: 12px !important;
+    letter-spacing: 0.01em;
+    box-sizing: border-box !important;
+    margin-bottom: 0.65em !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .btn,
+  .btn-red,
+  .btn-sort-answers {
+    width: 100% !important;
+    min-width: 0 !important;
+    font-size: 1.23rem !important;
+    padding: 1.13em 0 !important;
+    border-radius: 13px !important;
+    letter-spacing: 0.02em;
+    margin-bottom: 1em !important;
+    box-sizing: border-box !important;
+  }
+  .btn-sort-answers {
+    margin-bottom: 1.1em !important;
+  }
+  .challenge-card-buttons .btn,
+  .challenge-card-buttons .btn-red {
+    margin-bottom: 0 !important;
+  }
+}
+@media (max-width: 700px) {
+  .btn,
+  .btn-red {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    font-size: 1.18rem !important;
+    padding: 1.15em 0 !important;
+    border-radius: 13px !important;
+    letter-spacing: 0.02em !important;
+    margin-bottom: 1em !important;
+    box-sizing: border-box !important;
+  }
+}
+/* PATCH: Mobile-Buttons "Antworten ansehen" und "Löschen" 100% Breite & Style */
+@media (max-width: 700px) {
+  .form-block .btn,
+  .form-block .btn-red {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    font-size: 1.22rem !important;
+    padding: 1.13em 0 !important;
+    border-radius: 13px !important;
+    letter-spacing: 0.02em !important;
+    margin-bottom: 1.1em !important;
+    margin-top: 0 !important;
+    box-sizing: border-box !important;
+  }
 }
