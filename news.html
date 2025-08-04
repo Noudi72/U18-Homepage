@@ -557,7 +557,7 @@
       apiKey: "AIzaSyCCvHZN1q72UQLqrkgWb-L5X6A4WesHqRw",
       authDomain: "ehcb-news.firebaseapp.com",
       projectId: "ehcb-news",
-      storageBucket: "ehcb-news.appspot.com",
+      storageBucket: "ehcb-news.firebasestorage.app",
       messagingSenderId: "250325515447",
       appId: "1:250325515447:web:81f10ce4ac286d10b92132"
     };
@@ -595,6 +595,8 @@
     // --- FILE UPLOAD LOGIK ---
     let uploadedFileURL = null;
     let uploadedFileType = null;
+    // Hinweis: Es wird ausschließlich der von getDownloadURL() gelieferte Link gespeichert.
+    // Falls der Upload fehlschlägt, wird KEINE Meta-Speicherung ermöglicht und ein Alert ausgegeben.
     function handleFileSelected(file) {
       if (!file) return;
       const allowedTypes = ['application/pdf', 'image/png', 'image/jpeg'];
@@ -619,13 +621,26 @@
         alert(translations[currentLang].uploadError);
         document.getElementById('uploadBtn').disabled = false;
         document.getElementById('uploadBtn').textContent = translations[currentLang].uploadBtn;
+        // Im Fehlerfall KEIN gespeicherter Link, Meta-Speicherung verhindern!
+        uploadedFileURL = null;
+        uploadedFileType = null;
+        document.getElementById('metaForm').style.display = 'none';
       }, () => {
+        // getDownloadURL() ist die EINZIGE erlaubte Quelle für die zu speichernde URL!
         uploadTask.snapshot.ref.getDownloadURL().then(url => {
           uploadedFileURL = url;
           uploadedFileType = file.type;
           document.getElementById('uploadBtn').disabled = false;
           document.getElementById('uploadBtn').textContent = translations[currentLang].uploadSuccess;
           document.getElementById('metaForm').style.display = '';
+        }).catch(err => {
+          // Fehler beim Holen des echten Download-Links -> KEIN speichern!
+          uploadedFileURL = null;
+          uploadedFileType = null;
+          alert(translations[currentLang].uploadError + " (Download-Link konnte nicht ermittelt werden)");
+          document.getElementById('uploadBtn').disabled = false;
+          document.getElementById('uploadBtn').textContent = translations[currentLang].uploadBtn;
+          document.getElementById('metaForm').style.display = 'none';
         });
       });
     }
@@ -640,8 +655,18 @@
     }
     function handleMetaSave(e) {
       e.preventDefault();
-      if (!uploadedFileURL || !uploadedFileType) {
-        alert('Bitte zuerst eine Datei hochladen!');
+      // Es darf nur dann gespeichert werden, wenn uploadedFileURL NICHT leer ist!
+      if (!uploadedFileURL || typeof uploadedFileURL !== "string" || uploadedFileURL.trim() === "" || !uploadedFileType) {
+        alert('Bitte zuerst eine Datei erfolgreich hochladen! (Kein Download-Link vorhanden)');
+        return;
+      }
+      // ZUSÄTZLICH: Sicherstellen, dass KEIN anderer Link-Typ gespeichert wird!
+      if (
+        !uploadedFileURL.startsWith("https://firebasestorage.googleapis.com/v0/b/ehcb-news.firebasestorage.app/o/")
+        || uploadedFileURL.includes(".appspot.com/o?name=")
+        || !uploadedFileURL.includes("alt=media")
+      ) {
+        alert('Ungültiger Download-Link. Bitte Datei erneut hochladen!');
         return;
       }
       const title = document.getElementById('pdfTitle').value.trim();
@@ -692,6 +717,7 @@
     resetUploadStep();
 
     // --- News List (Anzeige) ---
+    // Hinweis: Es wird ausschließlich der Download-Link von getDownloadURL() angezeigt/genutzt.
     let newsFilterText = "";
     let newsSortMode = "newest";
     function renderNewsList(newsList) {
@@ -838,7 +864,7 @@
     darkToggle.addEventListener('click', () => setDarkMode(!body.classList.contains('dark-mode')));
     darkToggle.addEventListener('keypress', e => { if(e.key === ' ' || e.key === 'Enter') setDarkMode(!body.classList.contains('dark-mode')); });
     darkToggleLabel.addEventListener('click', () => setDarkMode(!body.classList.contains('dark-mode')));
-    if(localStorage.getItem('ehcb_news_darkmode') === '1') setDarkMode(true);
-  </script>
+</script>
+
 </body>
 </html>
